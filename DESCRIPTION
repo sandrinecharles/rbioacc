@@ -1,0 +1,38 @@
+Package: rbioacc
+Title: Inference and Prediction of ToxicoKinetic (TK) Models
+Version: 0.0.1.9000
+Authors@R: c(
+    person("Virgile", "Baudrot", role = c("aut"), email = "virgile.baudrot@posteo.net"),
+    person("Aurélie", "Siberchicot", role = c("aut", "cre"), email = "aurelie.siberchicot@univ-lyon1.fr"),
+    person("Aude", "Ratier", role = "aut"),
+    person("Sandrine", "Charles", role = "aut")
+    )
+Description: The MOSAICbioacc application is a turn-key package providing bioaccumulation
+    factors (BCF/BMF/BSAF) from a toxicokinetic (TK) model fitted to
+    accumulation-depuration data. It is designed to fulfil the requirements
+    of regulators when examining applications for market authorization of active
+    substances.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
+Imports: 
+    methods,
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.1.1),
+    testthat
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+SystemRequirements: GNU make
+Config/testthat/edition: 3
