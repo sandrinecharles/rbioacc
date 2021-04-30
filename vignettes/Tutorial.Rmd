@@ -1,0 +1,32 @@
+---
+title: "Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(rbioacc)
+data("Male_Gammarus_Single")
+
+object = Male_Gammarus_Single
+time_accumulation = 4
+modelData_MGS = modelData(Male_Gammarus_Single, time_accumulation = 4)
+fit <- generalTK_stan(modelData_MGS, iter = 10000)
+print(fit)
+
+library(rstan)
+fitMCMC = rstan::extract(fit)
+quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+```

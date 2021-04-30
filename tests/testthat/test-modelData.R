@@ -1,5 +1,5 @@
 test_that("modelData outputs", {
-  
+
   data("Male_Gammarus_Single")
   modelData(Male_Gammarus_Single, time_accumulation = 4)
   
@@ -15,4 +15,17 @@ test_that("modelData outputs", {
   data("Chironomus_benzoapyrene")
   modelData(Chironomus_benzoapyrene, time_accumulation = 3)
   
+  test_object = Male_Gammarus_Single
+  
+  test_that("TEST .check_modelData_object", {
+    expect_null(rbioacc:::.check_modelData_object(test_object))
+  })
+  test_that("TEST .modelDataSingle", {
+    test_ls_object <- base::split(test_object, test_object$replicate)
+    test_sgl_object = test_ls_object[[1]]
+    test_ls_class = rbioacc:::.modelDataSingle(test_sgl_object, time_accumulation = 4)
+    expect_equal(class(test_ls_class), "list")
+  })
+  
 })
+

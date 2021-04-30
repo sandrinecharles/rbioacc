@@ -2,12 +2,12 @@
 
 #include <Rcpp.h>
 using namespace Rcpp ;
-#include "stanExports_complexTK.h"
+#include "stanExports_generalTK.h"
 
-RCPP_MODULE(stan_fit4complexTK_mod) {
+RCPP_MODULE(stan_fit4generalTK_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("model_complexTK")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("model_generalTK")
 
     .constructor<SEXP,SEXP,SEXP>()
 

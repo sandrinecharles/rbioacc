@@ -1,26 +1,30 @@
 data {
+  // Number of replicate
+  int<lower=0> n_rep ;
+  
   // Time points
-  int<lower=0> lentp ;
+  int<lower=0> lentp;
   vector[lentp] tp ;
-
+  
   // Exposure profiles
   int<lower=0> n_exp ;
   matrix[lentp, n_exp] Cexp ;
   
   // Internal concentraion
-  vector[lentp] Cobs ;
-  
+  real Cobs[lentp, n_rep];
+
   // Metabolites
   int<lower=0> n_met ;
-  matrix[lentp, n_met] Cmet ;
-  
+  real Cmet[lentp, n_met, n_rep] ;
+
   // Growth
   int<lower=0> n_out ;
   
-  vector[lentp] Gobs ;
+  real Gobs[lentp, n_rep] ;
+  
   real<lower=0> gmaxsup ;
   
-  //
+  // TK accumulation / depuration
   int<lower=0> rankacc ;
   real<lower=0> tacc ;
   real<lower=0> C0 ;
@@ -71,8 +75,11 @@ transformed parameters{
     km[i] = 10 ^ log10km[i] ;
     kem[i] = 10 ^ log10kem[i] ;
   }
-
-  M = sum(km) ;
+  if(n_met == 0){
+    M = 0 ;
+  } else{
+     M = sum(km) ;
+  }
   E = sum(ke) ;
   for(t in 1:lentp){
     // real operator*(row_vector x, vector y)
@@ -87,23 +94,27 @@ transformed parameters{
     // Parent compound
     CGpred[t, 1] = (C0 - R[t]) * exp(-(E + M) * tp[t]) + R[t] ;
     // Metabolites
-    for(i in 1:n_met){
-       Cmetpred[t,i] = km[i] * (
-         (C0-R[t])/ D[i] * (exp(-(E+ M)*tp[t])-exp(-kem[i] * tp[t])) + R[t] / kem[i] * (1 - exp(-(kem[i] * tp[t]))) 
-       ) ;
+    if(n_met > 0){
+      for(i in 1:n_met){
+         Cmetpred[t,i] = km[i] * (
+           (C0-R[t])/ D[i] * (exp(-(E+ M)*tp[t])-exp(-kem[i] * tp[t])) + R[t] / kem[i] * (1 - exp(-(kem[i] * tp[t]))) 
+         ) ;
+      }
     }
   }
   //DEPURATION PHASE (t > tacc)
   for(t in (rankacc+1):lentp){
     // Parent compound
-    CGpred[t, 1] = (C0 - R[t] * (1 - exp(E + M))) * exp(-(E + M) * tp[t]) ;
+    CGpred[t, 1] = (C0 - R[t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * tp[t]) ;
     // Metabolites
-    for(i in 1:n_met){
+    if(n_met > 0){
+      for(i in 1:n_met){
       Cmetpred[t,i] = km[i] * (
         (C0-R[t]) / D[i] * (exp(-(E + M) * tp[t]) - exp(-kem[i] * tp[t])) + 
         R[t] / kem[i] * (exp(-kem[i] * (tp[t]-tacc)) - exp(-kem[i] * tp[t])) +
         R[t] / D[i] * (exp(-(E+M)*(tp[t]-tacc)) - exp(-kem[i] * (tp[t] - tacc)))
-      ) ;
+        ) ;
+      }
     }
   }
   // GROWTH
@@ -112,6 +123,7 @@ transformed parameters{
       CGpred[t, 2] = (G0 - gmax) * exp(-ke[2] * tp[t]) + gmax ;
     }
   }
+
 }
 model {
   // PRIORS
@@ -127,28 +139,40 @@ model {
      target +=  uniform_lpdf(G0 | 0, gmaxsup) ;
   }
   
-  // ACCUMULATION PHASE (0 =< t =< tacc) #
-  for(t in 1:rankacc){
-    // Parent compound
-    target += normal_lpdf(Cobs[t] | CGpred[t, 1], sigmaCpred) ;
-    // Metabolites
-    for(i in 1:n_met){
-       target += normal_lpdf(Cmet[t,i] | Cmetpred[t], sigmaCmetpred[i]) ;
-    }
-  }
-  //DEPURATION PHASE (t > tacc)
-  for(t in (rankacc+1):lentp){
-    // Parent compound
-    target += normal_lpdf(Cobs[t] | CGpred[t, 1], sigmaCpred) ;
-    // Metabolites
-    for(i in 1:n_met){
-       target += normal_lpdf(Cmet[t,i] | Cmetpred[t], sigmaCmetpred[i]) ;
-    }
-  }
-  if(n_out == 2){
-      for(t in 1:lentp){
-        target += normal_lpdf(Gobs[t] | CGpred[t, 2], sigmaGpred) ;
+  for(rep in 1:n_rep){
+    // ACCUMULATION PHASE (0 =< t =< tacc) #
+    for(t in 1:rankacc){
+      // Parent compound
+      if(!is_inf(Cobs[t,rep])){
+        target += normal_lpdf(Cobs[t, rep] | CGpred[t, 1], sigmaCpred) ;
       }
+      // Metabolites
+      for(i in 1:n_met){
+        if(!is_inf(Cmet[t,i,rep])){
+          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t], sigmaCmetpred[i]) ;
+        }
+      }
+    }
+    //DEPURATION PHASE (t > tacc)
+    for(t in (rankacc+1):lentp){
+      // Parent compound
+      if(!is_inf(Cobs[t,rep])){
+        target += normal_lpdf(Cobs[t, rep] | CGpred[t, 1], sigmaCpred) ;
+      }
+      // Metabolites
+      for(i in 1:n_met){
+        if(!is_inf(Cmet[t,i,rep])){
+          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t], sigmaCmetpred[i]) ;
+        }
+      }
+    }
+    if(n_out == 2){
+      for(t in 1:lentp){
+        if(!is_inf(Gobs[t, rep])){
+          target += normal_lpdf(Gobs[t, rep] | CGpred[t, 2], sigmaGpred) ;
+        }
+      }
+    }
   }
 }
 /*
