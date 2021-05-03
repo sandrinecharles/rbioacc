@@ -21,7 +21,7 @@ data("Male_Gammarus_Single")
 object = Male_Gammarus_Single
 time_accumulation = 4
 modelData_MGS = modelData(Male_Gammarus_Single, time_accumulation = 4)
-fit <- generalTK_stan(modelData_MGS, iter = 10000)
+fit <- fitTK(modelData_MGS, iter = 10000)
 print(fit)
 
 library(rstan)
