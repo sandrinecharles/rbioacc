@@ -1,6 +1,6 @@
 image: r-base
 
-test:
+build:
   script:
     - apt-get install -y libcurl4-openssl-dev
     -  R -e 'install.packages(c("rstan"))
