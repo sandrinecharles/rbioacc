@@ -1,8 +1,9 @@
 image: r-base
 
 build:
-  script:
+  before_script:
     - apt-get install -y libcurl4-openssl-dev
+  script:
     -  R -e 'install.packages(c("rstan"))
     #- R -e 'install.packages(c("Rcpp", "RcppParallel", "V8", "rstan",  "rstantools", "testthat", "BH", "RcppEigen", "StanHeaders"))'
     #- R CMD build . --no-build-vignettes --no-manual
