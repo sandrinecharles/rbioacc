@@ -1,62 +1,129 @@
 image: r-base
 
-stages:
+# For Mac OS and Windows use tags 'R' (version 3.6.3) or 'R4' depending of the R version needed.
+# Authors : Jean-François Rey <jean-francois.rey@inrae.fr>
+
+stages: 
+  - create
+  - tests
   - build
-  - document
-  - check
-  - test
-  - deploy
 
-before_script:
-  - apt-get update
+R-base-create:
+  stage: create
+  script:
+    # generate Documentation
+    - "Rscript -e \"roxygen2::roxygenize('.', roclets=c('rd', 'collate', 'namespace'))\""
+    # create the package
+    - "R CMD build . --resave-data"
+  artifacts:
+    paths:
+      # keep the package for later jobs
+      - "$(ls -rt *_*.tar.gz |tail -1)"
+      # can use $CI_PROJECT_NAME if package name the same
 
-buildbinary:
+R-Mac-create:
+  stage: create
+  tags:
+    - "Mac"  
+    - "R4"
+  script:
+    - "Rscript -e \"roxygen2::roxygenize('.', roclets=c('rd', 'collate', 'namespace'))\""
+    - "R CMD build . --resave-data"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.tar.gz |tail -1)"
+
+R-Windows-create:
+  stage: create
+  tags:
+    - "win10"
+    - "R4"
+  script:
+    - "Rscript -e \"roxygen2::roxygenize('.', roclets=c('rd', 'collate', 'namespace'))\""
+    - "R CMD build . --resave-data"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.tar.gz |tail -1)"
+
+R-base-tests:
+  stage: tests
+  script:
+    - "R CMD check --as-cran $(ls -rt *_*.tar.gz |tail -1)"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.tar.gz |tail -1)"
+  dependencies:
+    - R-base-create
+
+R-Mac-tests:
+  stage: tests
+  tags:
+    - "Mac"  
+    - "R4"
+  script:
+    - "sleep 120" # time for ntp update
+    - "R CMD check --as-cran $(ls -rt *_* |tail -1)"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.tar.gz |tail -1)"
+  dependencies:
+    - R-Mac-create
+
+R-Windows-tests:
+  stage: tests
+  tags:
+    - "win10"
+    - "R4"
+  script:
+    - "R CMD check --as-cran $(ls -rt *_*.tar.gz |tail -1)"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.tar.gz |tail -1)"
+  dependencies:
+    - R-Windows-create
+
+release-R:
   stage: build
   script:
-    - r -e 'devtools::build(binary = TRUE)'
+    - "echo \"Nothing to do\""
+  artifacts:
+    paths:
+      - "$(ls -rt *_* |tail -1)"
+  only:
+    - tags
+  dependencies:
+    - R-base-tests
 
-#r-build_test:
-#  stage: build
-#  script:
-#    - "Rscript -e \"pkgbuild::compile_dll('rbioacc')\""
-#    - "Rscript -e \"roxygen2::roxygenize('rbioacc', roclets=c('rd', 'collate', 'namespace'))\""
-#    - "R CMD build rbioacc --resave-data --compact-vignettes=both"
-#    - "R CMD check --as-cran $(ls -rt rbioacc_* |tail -1)"
-#  artifacts:
-#    paths:
-#      - "$(ls -rt rbioacc_*.tar.gz |tail -1)"
-
-documentation:
-  stage: document
+release-Windows:
+  stage: build
+  tags:
+    - "win10"
+    - "R4"
   script:
-    - r inst/ci/document.R
+    - "R CMD INSTALL --build --force-biarch $(ls -rt *_*.tar.gz |tail -1)"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.zip |tail -1)"
+  only:
+    - tags
+  dependencies:
+    - R-Windows-tests
 
-checkerrors:
-  stage: check
+release-MacOS:
+  stage: build
+  tags:
+    - "Mac"  
+    - "R4"
   script:
-    - r -e 'if (!identical(devtools::check(document = FALSE, args = "--no-tests")[["errors"]], character(0))) stop("Check with Errors")'
-
-checkwarnings:
-  stage: check
-  script:
-    - r -e 'if (!identical(devtools::check(document = FALSE, args = "--no-tests")[["warnings"]], character(0))) stop("Check with Warnings")'
-
-checknotes:
-  stage: check
-  script:
-    - r -e 'if (!identical(devtools::check(document = FALSE, args = "--no-tests")[["notes"]], character(0))) stop("Check with Notes")'
-
-unittests:
-  stage: test
-  script:
-    - r -e 'if (any(as.data.frame(devtools::test())[["failed"]] > 0)) stop("Some tests failed.")'
-
-codecov:
-  stage: test
-  script:
-    - r -e 'covr::codecov()'
-
-
+    - "sleep 120" # time for ntp update
+    - "R CMD INSTALL --build $(ls -rt *_*.tar.gz |tail -1)"
+  artifacts:
+    paths:
+      - "$(ls -rt *_*.tgz | tail -1)"
+  only:
+    - tags
+  dependencies:
+    - R-Mac-tests
 
 
 
