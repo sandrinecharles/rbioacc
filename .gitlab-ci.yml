@@ -2,6 +2,8 @@ image: r-base
 
 test:
   script:
-    - R -e 'install.packages(c("Rcpp", "RcppParallel", "V8", "rstan",  "rstantools", "testthat", "BH", "RcppEigen", "StanHeaders"))'
-    - R CMD build . --no-build-vignettes --no-manual
-    - R CMD check *tar.gz --no-build-vignettes --no-manual
+    - apt-get install -y libcurl4-openssl-dev
+    -  R -e 'install.packages(c("rstan"))
+    #- R -e 'install.packages(c("Rcpp", "RcppParallel", "V8", "rstan",  "rstantools", "testthat", "BH", "RcppEigen", "StanHeaders"))'
+    #- R CMD build . --no-build-vignettes --no-manual
+    #- R CMD check *tar.gz --no-build-vignettes --no-manual
