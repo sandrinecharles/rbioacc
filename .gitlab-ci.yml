@@ -1,0 +1,11 @@
+r-build_test:
+  tags:
+    - "r-base"
+  script:
+    - "Rscript -e \"pkgbuild::compile_dll('rbioacc')\""
+    - "Rscript -e \"roxygen2::roxygenize('rbioacc', roclets=c('rd', 'collate', 'namespace'))\""
+    - "R CMD build rbioacc --resave-data --compact-vignettes=both"
+    - "R CMD check --as-cran $(ls -rt rbioacc_* |tail -1)"
+  artifacts:
+    paths:
+      - "$(ls -rt rbioacc_*.tar.gz |tail -1)"
