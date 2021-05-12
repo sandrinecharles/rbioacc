@@ -78,7 +78,7 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   rtrn_ls$len_vtdep = length(rtrn_ls$vtdep)
   
   # 4. Priors Conc
-  rtrn_ls$unifMax = 5*max(object$conc, na.rm = TRUE)
+  rtrn_ls$unifMax = 500 * max(object$conc, na.rm = TRUE)
   
   # 5. Priors Growth
   if("growth" %in% colnames(object)){
@@ -94,14 +94,11 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   return(rtrn_ls)
 }
 
-
-
 .is_equal_rmInf <- function(x,y){ 
   ux = unique(x) ; uy = unique(y)
   ux = ux[ux != Inf] ; uy = uy[uy != Inf]
   return(all(ux == uy))
 }
-
 
 .index_col_exposure <- function(object){
   col_exp = base::match(c("expw", "exps", "expf", "exppw"), base::colnames(object))
@@ -114,7 +111,6 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   col_conc <- match(col_conc[col_conc != "conc"], obj_colname)
   return(col_conc[!base::is.na(col_conc)])
 }
-
 
 .readapt_time <- function(object, time_reference){
   obj_colname = base::colnames(object)
@@ -139,6 +135,20 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   return(object)
 }
 
+.interpolate_Inf <- function(v,t){
+  min_t <- min(t[which(v != Inf)])
+  max_t <- max(t[which(v != Inf)])
+  v[t < min_t] <- 0
+  v[t > max_t] <- 0
+  v[!is.finite(v)] <- NA
+  return(as.numeric(zoo::na.approx(v, t)))
+}
+
+.regularize_Inf <- function(v){
+  v[!is.finite(v)] <- unique(v[is.finite(v)])
+  return(v)
+}
+
 .modelDataSingle <- function(object, ls_col, ...){
   
   col_exp = ls_col$col_exposure
@@ -147,6 +157,12 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   rtrn_ls = list()
   # 1. Exposure
   rtrn_ls$Cexp = as.matrix(object[, col_exp])
+  # linear interpolation
+  for( i in 1:length(col_exp)){
+    # rtrn_ls$Cexp[,i] <- .interpolate_Inf(rtrn_ls$Cexp[,i], object$time)
+    rtrn_ls$Cexp[,i] <- .regularize_Inf(rtrn_ls$Cexp[,i])
+  }
+ 
   # 2. Parent Conc
   rtrn_ls$Cobs = as.matrix(object$conc)
   # 3. Metabolites
@@ -171,13 +187,17 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   
   # time x replicate
   if(!('time' %in% obj_colname)) stop("`time` not a column name.")
-  
   if(!('replicate' %in% obj_colname)) stop("`replicate` not a column name.")
+  #☺ check unique time / replicate
+  ls_object <- base::split(object, object$replicate)
+  check_timereplicate <- sapply(1:length(ls_object), function(i) length(unique(ls_object[[i]]$time)) == length(ls_object[[i]]$time))
+  if(!all(check_timereplicate)) stop("no unique `time` per `replicate`")
   
   if(!('conc' %in% obj_colname)) stop("`conc` not a column name.")
   
   if(!any(c("expw", "exps", "expf", "exppw") %in% obj_colname)) stop("no exposure routes provided.")
   
+
 }
 
 

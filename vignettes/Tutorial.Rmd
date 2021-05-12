@@ -3,8 +3,10 @@ title: "Tutorial"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tutorial}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -14,15 +16,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r fitMGS}
 library(rbioacc)
 data("Male_Gammarus_Single")
-
-object = Male_Gammarus_Single
-time_accumulation = 4
-modelData_MGS = modelData(Male_Gammarus_Single, time_accumulation = 4)
+data_MGS = Male_Gammarus_Single
+modelData_MGS = modelData(data_MGS, time_accumulation = 4)
 fit <- fitTK(modelData_MGS, iter = 10000)
 print(fit)
+save(fit, file = "data/fitMGS.rda")
 
 library(rstan)
 fitMCMC = rstan::extract(fit)
@@ -30,3 +31,79 @@ quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
 ```
+
+```{r fitMGM}
+library(rbioacc)
+data("Male_Gammarus_Merged")
+data_MGM = Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 7.08021e-05, ]
+modelData_MGM = modelData(data_MGM, time_accumulation = 4)
+fit <- fitTK(modelData_MGM, iter = 10000)
+print(fit)
+save(fit, file = "data/fitMGM.rda")
+```
+
+```{r statMGM}
+library(rstan)
+fitMCMC = rstan::extract(fit)
+quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+```
+
+
+```{r fitMGSG}
+library(rbioacc)
+data("Male_Gammarus_seanine_growth")
+modelData_MGSG = modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417)
+fit <- fitTK(modelData_MGSG, iter = 10000)
+print(fit)
+save(fit, file = "data/fitMGSG.rda")
+```
+
+```{r statMGSG}
+library(rstan)
+fitMCMC = rstan::extract(fit)
+quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+```
+
+
+```{r fitOT}
+library(rbioacc)
+data("Oncorhynchus_two")
+Oncorhynchus_two$expw = unique(Oncorhynchus_two$expw)[1]
+modelData_OT <- modelData(Oncorhynchus_two, time_accumulation = 49)
+fit <- fitTK(modelData_OT, iter = 10000)
+print(fit)
+save(fit, file = "data/fitOT.rda")
+```
+
+```{r statOT}
+library(rstan)
+fitMCMC = rstan::extract(fit)
+quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+```
+
+
+```{r fitCB}
+library(rbioacc)
+data("Chironomus_benzoapyrene")
+modelData_CB <- modelData(Chironomus_benzoapyrene, time_accumulation = 3)
+modelData_CB$unifMax = modelData_CB$unifMax  * 100
+fit <- fitTK(modelData_CB, iter = 10000)
+print(fit)
+save(fit, file = "data/fitCB.rda")
+```
+ 
+```{r statCB}
+data("fitCB")
+library(rstan)
+fitMCMC = rstan::extract(fit)
+quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+```
+

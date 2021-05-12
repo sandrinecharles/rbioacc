@@ -6,6 +6,6 @@
 #' @return An object of class `stanfit` returned by `rstan::sampling`
 #'
 fitTK <- function(stanTKdata, ...) {
-  out <- rstan::sampling(stanmodels$generalTK, data = stanTKdata, ...)
+  out <- rstan::sampling(stanmodels$TK, data = stanTKdata, ...)
   return(out)
 }
