@@ -149,7 +149,7 @@ model {
       // Metabolites
       for(i in 1:n_met){
         if(!is_inf(Cmet[t,i,rep])){
-          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t], sigmaCmetpred[i]) ;
+          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t,i], sigmaCmetpred[i]) ;
         }
       }
     }
@@ -162,7 +162,7 @@ model {
       // Metabolites
       for(i in 1:n_met){
         if(!is_inf(Cmet[t,i,rep])){
-          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t], sigmaCmetpred[i]) ;
+          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t,i], sigmaCmetpred[i]) ;
         }
       }
     }
@@ -175,6 +175,29 @@ model {
     }
   }
 }
+
+generated quantities {
+  real Cobs_out[lentp]; 
+  real Cmet_out[lentp, n_met]; 
+  real Gobs_out[lentp];
+  
+  for(t in 1:lentp){
+    // Parent compound
+    Cobs_out[t] = normal_rng(CGpred[t,1], sigmaCpred) ;
+    // Metabolites
+    for(i in 1:n_met){
+      Cmet_out[t,i] = normal_rng(Cmetpred[t,i], sigmaCmetpred[i]) ;
+    }
+  }
+  if(n_out == 2){
+    for(t in 1:lentp){
+      if(!is_inf(Gobs_out[t])){
+        Cobs_out[t] = normal_rng(CGpred[t,2], sigmaGpred) ;
+      }
+    }
+  }
+}
+
 /*
 generated quantities {
   // 0 < t < tacc
