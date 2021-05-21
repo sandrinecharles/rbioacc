@@ -16,6 +16,15 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r loadPackage}
+library(rbioacc)
+library(rstan)
+library(ggplot2)
+```
+
+
+## Male Gammarus Single
+
 ```{r fitMGS}
 library(rbioacc)
 data("Male_Gammarus_Single")
@@ -24,7 +33,9 @@ modelData_MGS = modelData(data_MGS, time_accumulation = 4)
 fit <- fitTK(modelData_MGS, iter = 10000)
 print(fit)
 save(fit, file = "data/fitMGS.rda")
+```
 
+```{r statMGS}
 library(rstan)
 fitMCMC = rstan::extract(fit)
 quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
@@ -32,18 +43,50 @@ quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
 ```
 
+```{r plotMGS}
+library(ggplot2)
+mat_quants = apply(fitMCMC$Cobs_out, 2, quantile, probs = c(0.025, 0.5, 0.975))
+df = data.frame(
+  time = modelData_MGS$tp,
+  q50 = mat_quants[2,],
+  qinf95 = mat_quants[1,],
+  qsup95 = mat_quants[3,]
+)
+
+ggplot() + 
+  theme_classic() +
+  labs(x = "Time", y = "Concentration") +
+    geom_ribbon(data = df,
+              aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey70") +
+  geom_line(data = df,
+            aes(x = time, y = q50), color = "orange") +
+  geom_point(data = data_MGS,
+             aes(x = time, y = conc))
+
+```
+
+## Male Gammarus Merged
+
 ```{r fitMGM}
-library(rbioacc)
 data("Male_Gammarus_Merged")
 data_MGM = Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 7.08021e-05, ]
 modelData_MGM = modelData(data_MGM, time_accumulation = 4)
 fit <- fitTK(modelData_MGM, iter = 10000)
 print(fit)
-save(fit, file = "data/fitMGM.rda")
+save(fit, file = "data/fitMGM_7.08.rda")
+
+data_MGM = Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 1.41604e-04, ]
+modelData_MGM = modelData(data_MGM, time_accumulation = 7)
+fit <- fitTK(modelData_MGM, iter = 20000)
+save(fit, file = "data/fitMGM_1.41.rda")
+
+data_MGM = Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 2.83208e-04, ]
+modelData_MGM = modelData(data_MGM, time_accumulation = 4)
+fit <- fitTK(modelData_MGM, iter = 10000)
+save(fit, file = "data/fitMGM_2.83.rda")
 ```
 
 ```{r statMGM}
-library(rstan)
 fitMCMC = rstan::extract(fit)
 quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
@@ -51,10 +94,20 @@ quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
 ```
 
 
+```{r plotMGM}
+S
+```
+
+
+## Male Gammarus seanine with growth
+
 ```{r fitMGSG}
 library(rbioacc)
 data("Male_Gammarus_seanine_growth")
 modelData_MGSG = modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417)
+# HACK TO REMOVE !!!
+modelData_MGSG$Cexp = matrix(rep(15.533, length(modelData_MGSG$Cexp)), ncol = 1)
+
 fit <- fitTK(modelData_MGSG, iter = 10000)
 print(fit)
 save(fit, file = "data/fitMGSG.rda")
@@ -64,19 +117,38 @@ save(fit, file = "data/fitMGSG.rda")
 library(rstan)
 fitMCMC = rstan::extract(fit)
 quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
-quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke[, 1], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$ke[, 2], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$km[, 1], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$km[, 2], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$km[, 3], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$kem[,1], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$kem[,2], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$kem[,3], probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCmetpred[, 1], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCmetpred[, 2], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCmetpred[, 3], probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaGpred, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$gmax, probs = c(0.025, 0.5, 0.975))
 ```
 
+## Oncorhynchus
 
 ```{r fitOT}
 library(rbioacc)
-data("Oncorhynchus_two")
-Oncorhynchus_two$expw = unique(Oncorhynchus_two$expw)[1]
-modelData_OT <- modelData(Oncorhynchus_two, time_accumulation = 49)
+data("Oncorhynchus_two") #  Pimephales_two
+data_OT = Oncorhynchus_two[Oncorhynchus_two$expw == 0.00440,]
+modelData_OT <- modelData(data_OT, time_accumulation = 49)
 fit <- fitTK(modelData_OT, iter = 10000)
 print(fit)
-save(fit, file = "data/fitOT.rda")
+save(fit, file = "data/fitOT_0.00440.rda")
+
+data_OT = Oncorhynchus_two[Oncorhynchus_two$expw == 0.00041,]
+modelData_OT <- modelData(data_OT, time_accumulation = 49)
+fit <- fitTK(modelData_OT, iter = 10000)
+print(fit)
+save(fit, file = "data/fitOT_0.00041.rda")
 ```
 
 ```{r statOT}
@@ -87,6 +159,28 @@ quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
 ```
 
+```{r plotOT}
+mat_quants = apply(fitMCMC$Cobs_out, 2, quantile, probs = c(0.025, 0.5, 0.975))
+df = data.frame(
+  time = modelData_OT$tp,
+  q50 = mat_quants[2,],
+  qinf95 = mat_quants[1,],
+  qsup95 = mat_quants[3,]
+)
+
+ggplot() + 
+  theme_classic() +
+  labs(x = "Time", y = "Concentration") +
+    geom_ribbon(data = df,
+              aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey70") +
+  geom_line(data = df,
+            aes(x = time, y = q50), color = "orange") +
+  geom_point(data = data_OT,
+             aes(x = time, y = conc))
+```
+
+
+## Chironomus benzo-a-pyrene
 
 ```{r fitCB}
 library(rbioacc)
@@ -99,11 +193,53 @@ save(fit, file = "data/fitCB.rda")
 ```
  
 ```{r statCB}
-data("fitCB")
-library(rstan)
 fitMCMC = rstan::extract(fit)
 quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$km, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$kem, probs = c(0.025, 0.5, 0.975))
 quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+quantile(fitMCMC$sigmaCmetpred, probs = c(0.025, 0.5, 0.975))
 ```
 
+```{r plotCBparent}
+mat_quants = apply(fitMCMC$Cobs_out, 2, quantile, probs = c(0.025, 0.5, 0.975))
+df = data.frame(
+  time = modelData_CB$tp,
+  q50 = mat_quants[2,],
+  qinf95 = mat_quants[1,],
+  qsup95 = mat_quants[3,]
+)
+
+data_CB = Chironomus_benzoapyrene
+ggplot() + 
+  theme_classic() +
+  labs(x = "Time", y = "Concentration") +
+    geom_ribbon(data = df,
+              aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey70") +
+  geom_line(data = df,
+            aes(x = time, y = q50), color = "orange") +
+  geom_point(data = data_CB,
+             aes(x = time, y = conc))
+```
+
+
+```{r plotCBmet}
+mat_quants = apply(fitMCMC$Cmet_out, 2, quantile, probs = c(0.025, 0.5, 0.975))
+df = data.frame(
+  time = modelData_CB$tp,
+  q50 = mat_quants[2,],
+  qinf95 = mat_quants[1,],
+  qsup95 = mat_quants[3,]
+)
+
+ggplot() + 
+  theme_classic() +
+  labs(x = "Time", y = "Concentration") +
+    geom_ribbon(data = df,
+              aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey70") +
+  geom_line(data = df,
+            aes(x = time, y = q50), color = "orange") +
+  geom_point(data = data_CB,
+             aes(x = time, y = concm1))
+```
