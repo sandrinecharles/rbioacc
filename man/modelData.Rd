@@ -13,6 +13,8 @@ modelData(object, ...)
 \item{object}{An object of class \code{data.frame}}
 
 \item{\dots}{Further arguments to be passed to generic methods}
+
+\item{time_accumulation}{A scalar givin accumulation time}
 }
 \value{
 A \code{list} with data and parameters require for model inference.

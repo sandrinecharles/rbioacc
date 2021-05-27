@@ -1,5 +1,7 @@
 #' Create a list giving data and parameters to use in the model inference.
+#' 
 #' @param object An object of class \code{data.frame}
+#' @param time_accumulation A scalar givin accumulation time
 #' @param \dots Further arguments to be passed to generic methods
 #' 
 #' @export
@@ -16,15 +18,17 @@ modelData <- function(object, ...){
 #' 
 #' @export
 #' 
-#' 
-#' 
-#' 
 modelData.data.frame <- function(object, time_accumulation, ...){
   
   .check_modelData_object(object)
   
   obj_colname = base::colnames(object)
   rtrn_ls = list()
+  
+  # Priors on concentrion 
+  # PRIORS ENLEVER - LA CONCENTRATION MAX !!!
+  rtrn_ls$unifMax = 500 * max(object$conc, na.rm = TRUE)
+  
   ########################
   # 0. GENERAL TIME VECTOR
   rtrn_ls$tp <- sort(unique(object$time))
@@ -56,57 +60,69 @@ modelData.data.frame <- function(object, time_accumulation, ...){
     stop("Replicates must have same Exposure profile")
   }
 
-  rtrn_ls$Cobs = do.call("cbind", sapply(ls_object, `[`, 2))
-  
-  Cmet = do.call("cbind", sapply(ls_object, `[`, 3))
+  Cmet <- do.call("cbind", sapply(ls_object, `[`, 2))
   dim(Cmet) <- c(rtrn_ls$lentp,rtrn_ls$n_met,rtrn_ls$n_rep)
   rtrn_ls$Cmet <- Cmet
-  
-  rtrn_ls$Gobs = do.call("cbind", sapply(ls_object, `[`, 4))
-  
-  # 3. Accumulation time
-  rtrn_ls$tacc = time_accumulation
-  rtrn_ls$rankacc = match(time_accumulation, rtrn_ls$tp)
 
-  # 4. Prediction
-  nsimu <- 500 # number of time points to simulate the model
-  vt <- base::seq(0.0000001, max(rtrn_ls$tp)-0.0000001, length.out = nsimu)
-  vt <- base::sort(c(vt, rtrn_ls$tp))
-  rtrn_ls$vtacc = vt[vt<=rtrn_ls$tacc]
-  rtrn_ls$len_vtacc = length(rtrn_ls$vtacc)
-  rtrn_ls$vtdep = vt[vt>rtrn_ls$tacc]
-  rtrn_ls$len_vtdep = length(rtrn_ls$vtdep)
-  
-  # 4. Priors Conc
-  rtrn_ls$unifMax = 500 * max(object$conc, na.rm = TRUE)
-  
+  CGobs <- do.call("cbind", sapply(ls_object, `[`, 3))
   # 5. Priors Growth
   if("growth" %in% colnames(object)){
     rtrn_ls$n_out <- 2
     rtrn_ls$gmaxsup <- 3*max(na.omit(object$growth, na.rm = TRUE))
+
   } else{
     rtrn_ls$n_out <- 1
     rtrn_ls$gmaxsup <- 0
   }
   
-  rtrn_ls$C0 = mean(object[object$time == 0, ]$conc, na.rm = TRUE)
+  dim(CGobs) <- c(rtrn_ls$lentp,rtrn_ls$n_out,rtrn_ls$n_rep)
+  rtrn_ls$CGobs <- CGobs
+  
+  # 3. Accumulation time
+  rtrn_ls$tacc <- time_accumulation
+  rtrn_ls$rankacc <- match(time_accumulation, rtrn_ls$tp)
 
+  rtrn_ls$C0 <- mean(object[object$time == 0, ]$conc, na.rm = TRUE)
+  
+  # # 4. Prediction
+  nsimu <- 500 # number of time points to simulate the model
+  vt <- base::seq(0.0000001, max(rtrn_ls$tp)-0.0000001, length.out = nsimu)
+  rtrn_ls$vt <- base::sort(unique(c(vt, rtrn_ls$tp)))
+  rtrn_ls$len_vt <- length(rtrn_ls$vt)
+  # rtrn_ls$vtacc = vt[vt<=rtrn_ls$tacc]
+  # rtrn_ls$len_vtacc = length(rtrn_ls$vtacc)
+  # rtrn_ls$vtdep = vt[vt>rtrn_ls$tacc]
+  # rtrn_ls$len_vtdep = length(rtrn_ls$vtdep)
+  
   return(rtrn_ls)
 }
 
+
+
+#' Check if two vectors \code{x} and {y} are equal after remove \code{Inf}
+#' 
+#' @param x A vector
+#' @param y A vector
+#' 
 .is_equal_rmInf <- function(x,y){ 
   ux = unique(x) ; uy = unique(y)
   ux = ux[ux != Inf] ; uy = uy[uy != Inf]
   return(all(ux == uy))
 }
 
-.index_col_exposure <- function(object){
-  col_exp = base::match(c("expw", "exps", "expf", "exppw"), base::colnames(object))
+
+#' Return column matching "expw", "exps", "expf", "exppw" of a \code{data.frame}
+#' 
+#' @param x A vector
+#' @param y A vector
+#' 
+.index_col_exposure <- function(data_frame){
+  col_exp = base::match(c("expw", "exps", "expf", "exppw"), base::colnames(data_frame))
   return(col_exp[!base::is.na(col_exp)])
 }
 
-.index_col_metabolite <- function(object){
-  obj_colname <- base::colnames(object)
+.index_col_metabolite <- function(data_frame){
+  obj_colname <- base::colnames(data_frame)
   col_conc <- obj_colname[sapply(obj_colname, function(x){ regexpr("conc", x) == TRUE})]
   col_conc <- match(col_conc[col_conc != "conc"], obj_colname)
   return(col_conc[!base::is.na(col_conc)])
@@ -159,12 +175,11 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   rtrn_ls$Cexp = as.matrix(object[, col_exp])
   # linear interpolation
   for( i in 1:length(col_exp)){
-    # rtrn_ls$Cexp[,i] <- .interpolate_Inf(rtrn_ls$Cexp[,i], object$time)
     rtrn_ls$Cexp[,i] <- .regularize_Inf(rtrn_ls$Cexp[,i])
   }
  
   # 2. Parent Conc
-  rtrn_ls$Cobs = as.matrix(object$conc)
+  # rtrn_ls$Cobs = as.matrix(object$conc)
   # 3. Metabolites
   if(length(col_conc) > 0){
     rtrn_ls$Cmet = as.matrix( object[, col_conc])
@@ -173,9 +188,11 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   }
   # 4. Growth
   if("growth" %in% colnames(object)){
-    rtrn_ls$Gobs = object$growth
+    # rtrn_ls$Gobs = object$growth
+    rtrn_ls$CGobs = matrix(c(object$conc,object$growth), byrow=FALSE, ncol=2)
   } else{
-    rtrn_ls$Gobs = rep(0, nrow(object))
+    # rtrn_ls$Gobs = matrix(0, nrow= nrow(object), ncol = 0)
+    rtrn_ls$CGobs = as.matrix(object$conc)
   }
   return(rtrn_ls)
 }
@@ -196,7 +213,6 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   if(!('conc' %in% obj_colname)) stop("`conc` not a column name.")
   
   if(!any(c("expw", "exps", "expf", "exppw") %in% obj_colname)) stop("no exposure routes provided.")
-  
 
 }
 
