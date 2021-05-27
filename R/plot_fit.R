@@ -9,14 +9,21 @@
 }
 
 .add_data = function(df_quant95,data,id){
-  ls <- lapply(1:ncol(data),
-               function(i){
-                 df_quant95$time = fit$stanTKdata$tp
-                 df_quant95$observation = data[,i]
-                 df_quant95$replicate = i
-                 return(df_quant95)
-               })
-  df <- do.call("rbind", ls)
+  if(is.vector(data)){
+    df_quant95$time = fit$stanTKdata$tp
+    df_quant95$observation = data
+    df_quant95$replicate = 1
+    df <- df_quant95
+  } else{
+    ls <- lapply(1:ncol(data),
+                 function(i){
+                   df_quant95$time = fit$stanTKdata$tp
+                   df_quant95$observation = data[,i]
+                   df_quant95$replicate = i
+                   return(df_quant95)
+                 })
+    df <- do.call("rbind", ls)
+  }
   df <- df[df$observation != Inf,]
   df$variable <-  id
   return(df)

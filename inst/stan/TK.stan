@@ -1,3 +1,30 @@
+functions{
+  // #include /include/linear_interpolation.stan
+  int findfirst(real t, vector xt) {
+    int i = 0 ;
+    if(t == max(xt)){
+      i = num_elements(xt) - 1 ;
+      return i ;
+    } else if(t < min(xt) || t > max(xt)){
+      return i ;
+    } else {
+      while (t >= xt[i+1]){
+        i = i+1 ;
+      }
+      return i ;
+    }
+  }
+  
+  real interpolate(real x, vector xpt, vector ypt){
+    if(x >= min(xpt) && x <= max(xpt)){
+      int idx = findfirst(x, xpt) ;
+      return ypt[idx] + (x - xpt[idx]) * (ypt[idx+1] - ypt[idx]) / (xpt[idx+1] - xpt[idx]) ;
+    } else{
+      return 0.0 ;
+    }
+  }
+}
+
 data {
   // Number of replicate
   int<lower=0> n_rep ;
@@ -11,17 +38,14 @@ data {
   matrix[lentp, n_exp] Cexp ;
   
   // Internal concentraion
-  real Cobs[lentp, n_rep];
+  // Growth
+  int<lower=0> n_out ;
+  real CGobs[lentp, n_out, n_rep];
 
   // Metabolites
   int<lower=0> n_met ;
   real Cmet[lentp, n_met, n_rep] ;
 
-  // Growth
-  int<lower=0> n_out ;
-  
-  real Gobs[lentp, n_rep] ;
-  
   real<lower=0> gmaxsup ;
   
   // TK accumulation / depuration
@@ -30,11 +54,12 @@ data {
   real<lower=0> C0 ;
   
   real unifMax ;
-  
-  int<lower=0> len_vtacc ; // length(vtacc)
-  int<lower=0> len_vtdep ; // length(vtdep)
-  vector[len_vtacc] vtacc ;
-  vector[len_vtdep] vtdep ;
+  int<lower=0> len_vt;
+  vector[len_vt] vt ;
+  // int<lower=0> len_vtacc ; // length(vtacc)
+  // int<lower=0> len_vtdep ; // length(vtdep)
+  // vector[len_vtacc] vtacc ;
+  // vector[len_vtdep] vtdep ;
 }
 parameters {
   vector[n_exp] log10ku ; // uptake
@@ -42,12 +67,11 @@ parameters {
   vector[n_met] log10km ;
   vector[n_met] log10kem ;
   
-  real<lower=0> sigmaCpred ;
+  real<lower=0> sigmaCGpred[n_out] ; 
   vector<lower=0>[n_met] sigmaCmetpred ;
-  real<lower=0> sigmaGpred ;
   
-  real<lower=0> gmax ;
-  real<lower=0> G0 ;
+  real<lower=0> gmax[n_out - 1] ;
+  real<lower=0> G0[n_out -1];
   
 }
 transformed parameters{
@@ -62,7 +86,7 @@ transformed parameters{
   vector[lentp] R ;
   vector[n_met] D ;
   // little hack merging Cpred and Gpred
-  matrix[lentp, n_out] CGpred ; 
+  matrix[lentp,n_out] CGpred ; 
   matrix[lentp,n_met] Cmetpred ;
 
   for(i in 1:n_exp){
@@ -120,10 +144,9 @@ transformed parameters{
   // GROWTH
   if(n_out == 2){
     for(t in 1:lentp){
-      CGpred[t, 2] = (G0 - gmax) * exp(-ke[2] * tp[t]) + gmax ;
+      CGpred[t, 2] = (G0[1] - gmax[1]) * exp(-ke[2] * tp[t]) + gmax[1] ;
     }
   }
-
 }
 model {
   // PRIORS
@@ -131,20 +154,20 @@ model {
   target += uniform_lpdf(log10ke | -5, 5) ;
   target += uniform_lpdf(log10km | -5, 5) ;
   target += uniform_lpdf(log10kem | -5, 5) ;
-  target += uniform_lpdf(sigmaCpred | 0, unifMax) ;
+  target += uniform_lpdf(sigmaCGpred[1] | 0, unifMax) ;
   target += uniform_lpdf(sigmaCmetpred | 0, unifMax) ;
   if(n_out == 2){
-     target +=  uniform_lpdf(sigmaGpred | 0, unifMax) ;
-     target +=  uniform_lpdf(gmax | gmaxsup/6, gmaxsup) ;
-     target +=  uniform_lpdf(G0 | 0, gmaxsup) ;
+     target +=  uniform_lpdf(sigmaCGpred[2] | 0, unifMax) ;
+     target +=  uniform_lpdf(gmax[1] | gmaxsup/6, gmaxsup) ;
+     target +=  uniform_lpdf(G0[1] | 0, gmaxsup) ;
   }
   
   for(rep in 1:n_rep){
     // ACCUMULATION PHASE (0 =< t =< tacc) #
     for(t in 1:rankacc){
       // Parent compound
-      if(!is_inf(Cobs[t,rep])){
-        target += normal_lpdf(Cobs[t, rep] | CGpred[t, 1], sigmaCpred) ;
+      if(!is_inf(CGobs[t,1,rep])){
+        target += normal_lpdf(CGobs[t,1,rep] | CGpred[t, 1], sigmaCGpred[1]) ;
       }
       // Metabolites
       for(i in 1:n_met){
@@ -156,20 +179,21 @@ model {
     //DEPURATION PHASE (t > tacc)
     for(t in (rankacc+1):lentp){
       // Parent compound
-      if(!is_inf(Cobs[t,rep])){
-        target += normal_lpdf(Cobs[t, rep] | CGpred[t, 1], sigmaCpred) ;
+      if(!is_inf(CGobs[t,1,rep])){
+        target += normal_lpdf(CGobs[t,1,rep] | CGpred[t, 1], sigmaCGpred[1]) ;
       }
       // Metabolites
       for(i in 1:n_met){
         if(!is_inf(Cmet[t,i,rep])){
-          target += normal_lpdf(Cmet[t,i, rep] | Cmetpred[t,i], sigmaCmetpred[i]) ;
+          target += normal_lpdf(Cmet[t,i,rep] | Cmetpred[t,i], sigmaCmetpred[i]) ;
         }
       }
     }
+    // GROWTH
     if(n_out == 2){
       for(t in 1:lentp){
-        if(!is_inf(Gobs[t, rep])){
-          target += normal_lpdf(Gobs[t, rep] | CGpred[t, 2], sigmaGpred) ;
+        if(!is_inf(CGobs[t,2,rep])){
+          target += normal_lpdf(CGobs[t,2,rep] | CGpred[t,2], sigmaCGpred[2]) ;
         }
       }
     }
@@ -177,13 +201,16 @@ model {
 }
 
 generated quantities {
-  real Cobs_out[lentp]; 
-  real Cmet_out[lentp, n_met]; 
-  real Gobs_out[lentp];
+  
+  real CGobs_out[lentp,n_out]; 
+  real Cmet_out[lentp,n_met];
+
+  real Cexp_interpol[len_vt, n_exp];
+  //vector[lentp] tp_y ;
   
   for(t in 1:lentp){
     // Parent compound
-    Cobs_out[t] = normal_rng(CGpred[t,1], sigmaCpred) ;
+    CGobs_out[t,1] = normal_rng(CGpred[t,1], sigmaCGpred[1]) ;
     // Metabolites
     for(i in 1:n_met){
       Cmet_out[t,i] = normal_rng(Cmetpred[t,i], sigmaCmetpred[i]) ;
@@ -191,63 +218,18 @@ generated quantities {
   }
   if(n_out == 2){
     for(t in 1:lentp){
-      if(!is_inf(Gobs_out[t])){
-        Cobs_out[t] = normal_rng(CGpred[t,2], sigmaGpred) ;
-      }
+      CGobs_out[t,2] = normal_rng(CGpred[t,2], sigmaCGpred[2]) ;
+    }
+  }
+  for(i in 1:n_exp){
+    //tp_y = Cexp[1:lentp, i] ;
+    for(t in 1:len_vt){
+      Cexp_interpol[t,i] = interpolate(vt[t], tp, Cexp[1:lentp, i]) ;
+      // if(tacc <= vt[t]){
+      //   
+      // } else{
+      //   
+      // }
     }
   }
 }
-
-/*
-generated quantities {
-  // 0 < t < tacc
-  vector[len_vtacc] Cpredp ;
-  vector[len_vtacc] Cobsp ;
-  matrix[len_vtacc,n_met] Cmetpredp ;
-  matrix[len_vtacc,n_met] Cmetp ;
-  // t > tacc
-  vector[len_vtdep] Cpredpdep ;
-  vector[len_vtdep] Cobspdep ;
-  matrix[len_vtdep,n_met] Cmetpredpdep ;
-  matrix[len_vtdep,n_met] Cmetpdep ;
-  // growth
-  vector[(len_vtacc+len_vtdep)] Gpredp ;
-  //
-  for(t in 1:len_vtacc){
-    // Parent compound
-    Cpredp[t] = (C0 - R[t]) * exp(-(E + M) * vtacc[t]) + R[t] ;
-    Cobsp[t] = normal_rng(Cpredp[t], sigmaCpred) ;
-    // Metabolites
-    for(i in 1:n_met){
-       Cmetpredp[t,i] = km[i] * (
-         (C0-R[t])/ D[i] * (exp(-(E+ M)*vtacc[t])-exp(-kem[i] * vtacc[t])) + R[t] / kem[i] * (1 - exp(-(kem[i] * vtacc[t]))) 
-       ) ;
-       Cmetp[t,i] = normal_rng(Cmetpredp[t,i], sigmaCmetpred[i]) ;
-    }
-  }
-  //
-  for(t in 1:len_vtdep){
-    // Parent compound
-    Cpredpdep[t] = (C0 - R[t] * (1 - exp(E + M))) * exp(-(E + M) * vtdep[t]) ;
-    Cobspdep[t] = normal_rng(Cpredpdep[t], sigmaCpred) ;
-    // Metabolites
-    for(i in 1:n_met){
-      Cmetpredpdep[t,i] = km[i] * (
-        (C0-R[t]) / D[i] * (exp(-(E + M) * vtdep[t]) - exp(-kem[i] * vtdep[t])) + 
-        R[t] / kem[i] * (exp(-kem[i] * (vtdep[t]-tacc)) - exp(-kem[i] * vtdep[t])) +
-        R[t] / D[i] * (exp(-(E+M)*(vtdep[t]-tacc)) - exp(-kem[i] * (vtdep[t] - tacc)))
-      ) ;
-      Cmetpdep[t,i] = normal_rng(Cmetpredpdep[t,i], sigmaCmetpred[i]) ;
-    }
-  }
-  if(n_out == 2){
-    for(t in 1:len_vtacc){
-      Gpredp[t] = (G0 - gmax) * exp(-ke[2] * vtacc[t]) + gmax ;
-    }
-    for(t in (len_vtacc+1):(len_vtacc+len_vtdep)){
-      Gpredp[t] = (G0 - gmax) * exp(-ke[2] * vtdep[t]) + gmax ;
-    }
-  }
-}
-*/
-
