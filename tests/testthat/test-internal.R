@@ -9,3 +9,11 @@ test_that(".regularize_Inf", {
     all(.regularize_Inf(c(Inf, Inf, 3, Inf, 3, Inf, Inf, 3, Inf, Inf)) == rep(3,10) )
   )
 })
+
+
+test_that(".is_equal_rmInf", {
+          
+  rbioacc:::.is_equal_rmInf(c(1,2,3), y=c(1, 2,3))
+  rbioacc:::.is_equal_rmInf(c(1,2,Inf,3), y=c(1, 2,3))
+         
+})

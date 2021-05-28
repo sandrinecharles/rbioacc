@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+
+^LICENSE\.md$
+^documentation$
+^data-raw$
+^lab$
+^Read-and-delete-me$
+^\.gitlab-ci\.yml$
+^\.travis\.yml$
+^\.gitignore$
+^vignettes/Tutorial_cache$

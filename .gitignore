@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+Read-and-delete-me
+inst/doc
+
+documentation
+lab
+data-raw
+vignettes/Tutorial_cache/
+vignettes/Tutorial_files/
+
+.travis.yml

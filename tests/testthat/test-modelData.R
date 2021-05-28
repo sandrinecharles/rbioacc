@@ -4,7 +4,7 @@ test_that("modelData outputs", {
   modelData(Male_Gammarus_Single, time_accumulation = 4)
   
   data("Male_Gammarus_seanine_growth")
-  modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417)
+  modelData(Male_Gammarus_seanine_growth, time_accumulation = )
   
   data("Male_Gammarus_Merged")
   modelData(Male_Gammarus_Merged, time_accumulation = 4)
@@ -28,4 +28,6 @@ test_that("modelData outputs", {
   })
   
 })
+
+
 

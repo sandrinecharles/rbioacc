@@ -5,6 +5,10 @@ An R package for the inference of complex toxicokinetics model
 
 ## Development
 
+### A lighter package build
+
+To make the package lighter, we have to remove the vignettes: see file `.Rbuildignore`
+
 ### Error to recompile during package dev
 
 Sometimes, there is an Error to recompile during development after change of .stan files.
