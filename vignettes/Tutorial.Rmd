@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ```{r loadPackage}
 library(rbioacc)
-library(ggplot2)
+# library(ggplot2)
 ```
 
 
@@ -52,12 +52,11 @@ quantile_table(fit_MGS)
 ```
 
 ```{r plotMGS, fig.height=4, fig.width=5}
-fit = fit_MGS # crazy hack for the S4 bug
-plot_fitTK(fit)
+plot(fit_MGS)
 ```
 
 ```{r ppcMGS, fig.height=4, fig.width=5}
-ppc_fitTK(fit_MGS)
+ppc(fit_MGS)
 ```
 
 ## Male Gammarus Merged
@@ -74,11 +73,11 @@ quantile_table(fit_MGM708)
 ```
 
 ```{r plotMGM708, fig.height=4, fig.width=5}
-plot_fitTK(fit_MGM708)
+plot(fit_MGM708)
 ```
 
 ```{r ppcMGM708, fig.height=4, fig.width=5}
-ppc_fitTK(fit_MGM708)
+ppc(fit_MGM708)
 ```
 
 ```{r fitMGM141, cache=TRUE, results="hide"}
@@ -92,11 +91,11 @@ quantile_table(fit_MGM141)
 ```
 
 ```{r plotMGM141, fig.height=4, fig.width=5}
-plot_fitTK(fit_MGM141)
+plot(fit_MGM141)
 ```
 
 ```{r ppcMGM141, fig.height=4, fig.width=5}
-ppc_fitTK(fit_MGM141)
+ppc(fit_MGM141)
 ```
 
 ```{r fitMGM283, cache=TRUE, results="hide"}
@@ -110,11 +109,11 @@ quantile_table(fit_MGM283)
 ```
 
 ```{r plotMGM283, fig.height=4, fig.width=5}
-plot_fitTK(fit_MGM283)
+plot(fit_MGM283)
 ```
 
 ```{r ppcMGM283, fig.height=4, fig.width=5}
-ppc_fitTK(fit_MGM283)
+ppc(fit_MGM283)
 ```
 
 ## Male Gammarus seanine with growth
@@ -131,12 +130,11 @@ quantile_table(fit_MGSG)
 ```
 
 ```{r plotMGSG, fig.height=6, fig.width=7}
-fit = fit_MGSG
-plot_fitTK(fit)
+plot(fit_MGSG)
 ```
 
 ```{r ppcMGSG, fig.height=6, fig.width=7}
-ppc_fitTK(fit_MGSG)
+ppc(fit_MGSG)
 ```
 
 ## Oncorhynchus
@@ -153,12 +151,11 @@ quantile_table(fit_OT440)
 ```
 
 ```{r plotOT440, fig.height=4, fig.width=5}
-fit = fit_OT440
-plot_fitTK(fit)
+plot(fit_OT440)
 ```
 
 ```{r ppcOT440, fig.height=4, fig.width=5}
-ppc_fitTK(fit)
+ppc(fit_OT440)
 ```
 
 ```{r fitOT041, cache=TRUE, results="hide"}
@@ -172,12 +169,11 @@ quantile_table(fit_OT041)
 ```
 
 ```{r plotOT041, fig.height=4, fig.width=5}
-fit = fit_OT041
-plot_fitTK(fit)
+plot(fit_OT041)
 ```
 
 ```{r ppcOT041, fig.height=4, fig.width=5}
-ppc_fitTK(fit_OT041)
+ppc(fit_OT041)
 ```
 
 ## Chironomus benzo-a-pyrene
@@ -194,10 +190,117 @@ quantile_table(fit_CB)
 ```
 
 ```{r plotCB, fig.height=4, fig.width=5}
-fit <- fit_CB
-plot_fitTK(fit_CB)
+plot(fit_CB)
 ```
 
 ```{r ppcCB, fig.height=4, fig.width=5}
-ppc_fitTK(fit_CB)
+ppc(fit_CB)
 ```
+
+
+# Time-variable exposure profile
+
+## Load variable data
+
+
+```{r}
+library(rbioacc)
+
+
+```
+
+
+```{r}
+library(rbioacc)
+#
+# --------------
+Exposure_Sialis_lutaria <- read.csv("C:/Users/virgi/OneDrive/Documents/PACKAGES/rbioacc/data-raw/Rubach2010_ETC_Exposure_Sialis_lutaria.csv", sep=";")
+Internal_Sialis_lutaria <- read.csv("C:/Users/virgi/OneDrive/Documents/PACKAGES/rbioacc/data-raw/Rubach2010_ETC_Internal_Sialis_lutaria.csv", sep=";")
+
+df_exposure = Exposure_Sialis_lutaria
+df_internal = Internal_Sialis_lutaria
+
+Cexp_rmNA = df_exposure$Cwater
+dim(Cexp_rmNA) = c(nrow(df_exposure), 1 )
+
+CGobs = df_internal$Cinternal
+dim(CGobs) = c(nrow(df_internal), 1, 1)
+
+Cmet = matrix(0, ncol = 0, nrow =  nrow(df_internal))
+dim(Cmet) = c(nrow(df_internal), 0, 1)
+
+y0 = 0 ; dim(y0) = 1
+
+modelData_ODE_MGS <- list(
+  n_rep = 1,
+  # ---
+  lentp = nrow(df_internal),
+  tp = df_internal$time,
+  
+  n_exp = 1,
+  
+  lentp_rmNA = nrow(df_exposure),
+  tp_rmNA = df_exposure$time,
+  Cexp_rmNA = Cexp_rmNA,
+  
+  n_out = 1,
+  
+  CGobs = CGobs,
+    
+  n_met = 0,
+  Cmet = Cmet,
+  
+  y0 = y0,
+  t0 = -0.001,
+  
+  gmaxsup = 1,
+  rankacc = nrow(df_exposure),
+  tacc = max(df_exposure$time),
+  C0 = 0,
+  
+  unifMax = 10,
+  
+  len_vt = nrow(df_internal),
+  vt =   df_internal$time
+    
+)
+
+fitODE_MGS <- fitTK2(modelData_ODE_MGS, iter = 1000)
+```
+
+
+```{r}
+library(rstan)
+
+fitMCMC = rstan::extract(fitODE_MGS$stanfit)
+
+
+.df_quant95 <- function(x){
+  mat_quants = apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975))
+  df = data.frame(
+    q50 = mat_quants[2,],
+    qinf95 = mat_quants[1,],
+    qsup95 = mat_quants[3,]
+  )
+  return(df)
+}
+
+df_quant = .df_quant95(fitMCMC$CGpred)
+df_quant$time = df_internal$time
+df_quant$Cinternal = df_internal$Cinternal
+
+library(ggplot2)
+library(gridExtra)
+plt_internal = ggplot(data = df_quant) +
+  theme_minimal() +
+  geom_point(aes(x = time, y = Cinternal)) +
+  geom_ribbon(aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey80")+
+  geom_line(aes(x = time, y = q50), color = "orange") 
+
+plt_exposure = ggplot(data = df_exposure) + 
+  theme_minimal() +
+  geom_line(aes(x = time, y = Cwater))
+
+grid.arrange(plt_internal, plt_exposure, layout_matrix = rbind(1,1,2) )
+```
+

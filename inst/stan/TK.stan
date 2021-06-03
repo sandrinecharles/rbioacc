@@ -1,3 +1,4 @@
+/*
 functions{
   // #include /include/linear_interpolation.stan
   int findfirst(real t, vector xt) {
@@ -24,7 +25,13 @@ functions{
     }
   }
 }
+*/
 
+functions {
+
+#include /include/linear_interpolation.stan
+
+}
 data {
   // Number of replicate
   int<lower=0> n_rep ;
@@ -233,3 +240,4 @@ generated quantities {
     }
   }
 }
+

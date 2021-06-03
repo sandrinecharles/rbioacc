@@ -8,16 +8,16 @@
   return(df)
 }
 
-.add_data = function(df_quant95,data,id){
+.add_data = function(df_quant95,tp,data,id){
   if(is.vector(data)){
-    df_quant95$time = fit$stanTKdata$tp
+    df_quant95$time = tp
     df_quant95$observation = data
     df_quant95$replicate = 1
     df <- df_quant95
   } else{
     ls <- lapply(1:ncol(data),
                  function(i){
-                   df_quant95$time = fit$stanTKdata$tp
+                   df_quant95$time = tp
                    df_quant95$observation = data[,i]
                    df_quant95$replicate = i
                    return(df_quant95)
@@ -30,17 +30,19 @@
 }
 
 .df_for_plot <- function(fit){
-  fitMCMC = rstan::extract(fit[["stanfit"]])
+  fitMCMC = rstan::extract(fit$stanfit)
   # 
   ls_out <- list()
   ls_out$conc <- .add_data(
     .df_quant95(fitMCMC$CGobs_out[,,1]),
+    fit$stanTKdata$tp,
     fit$stanTKdata$CGobs[,1,],
     "conc"
   )
   if(dim(fitMCMC$CGobs_out)[3] == 2){
     ls_out$growth <- .add_data(
       .df_quant95(fitMCMC$CGobs_out[,,2]),
+      fit$stanTKdata$tp,
       fit$stanTKdata$CGobs[,2,],
       "growth"
     )
@@ -50,6 +52,7 @@
       name <- paste0("concm",i)
       ls_out[[name]] <- .add_data(
         .df_quant95(fitMCMC$Cmet_out[,,i]),
+        fit$stanTKdata$tp,
         fit$stanTKdata$Cmet[,i,],
         name
       )
@@ -73,8 +76,8 @@
 #' 
 #' @import ggplot2
 #' 
-plot_fitTK <- function(fit){
-#plot.fitTK <- function(fit){
+plot.fitTK <- function(fit){
+# plot_fitTK <- function(fit){
   
   df <- .df_for_plot(fit)
   

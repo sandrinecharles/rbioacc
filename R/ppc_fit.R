@@ -24,9 +24,9 @@ ppc <- function(x, ...){
 #' 
 #' @export
 #' 
-ppc_fitTK <- function(fit){
-# ppc.fitTK <- function(fit){
-  df <- .df_for_plot(fit)
+ppc.fitTK <- function(fit){
+# ppc_fitTK <- function(fit){
+    df <- .df_for_plot(fit)
   
   df$col_range <- ifelse(df$qinf95 > df$observation | df$qsup95 < df$observation, "out", "in")
   

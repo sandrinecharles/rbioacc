@@ -7,7 +7,7 @@
 #' @export
 #'
 quantile_table <- function(fit, probs = c(0.025, 0.5, 0.975)){
-  
+
   fitMCMC = rstan::extract(fit[["stanfit"]])
 
   ls <- list()
