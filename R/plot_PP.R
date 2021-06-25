@@ -1,22 +1,22 @@
 #' @export
 #' 
-plot_PriorPost <- function(fit, ...){
-  UseMethod("plot_PriorPost")
+df_PriorPost <- function(fit, ...){
+  UseMethod("df_PriorPost")
 }
 
-#' Plot Posterior over Prior 
-#'
+#' Data frame of Posterior over Prior 
 #' 
 #' @param fit An object of class \code{fitTK} returned by the function \code{fitTK()}.
-#' @param select A string selecting the parameters. Defaults is \code{NULL} and select all parameters..
+#' @param select A string selecting the parameters. Defaults is \code{"all"} and select all parameters..
 #' Deterministc parameters can be selected by setting \code{"deterministic"} and 
 #' stochastic parameter with \code{"stochastic"}
+#' 
+#' @return An object of class \code{data.frame}
 #' 
 #' @export
 #' 
 #' 
-plot_PriorPost.fitTK <- function(fit, select = NULL){
-  
+df_PriorPost.fitTK <- function(fit, select = "all"){
   fitMCMC <- rstan::extract(fit[["stanfit"]])
   lengthMCMC <- nrow(fitMCMC$ku)
   
@@ -56,7 +56,7 @@ plot_PriorPost.fitTK <- function(fit, select = NULL){
       ls_prior$sigmaCmet <- lapply(1:ncol(fitMCMC$sigmaCmetpred), function(i) runif(lengthMCMC, 0,  fit$stanTKdata$unifMax))
     }
   }
- 
+  
   c_post <- do.call("c", ls_post)
   c_prior <- do.call("c", ls_prior)
   c_var1 <- rep(names(c_post), each = lengthMCMC)
@@ -67,6 +67,32 @@ plot_PriorPost.fitTK <- function(fit, select = NULL){
     type = c(rep("posterior", length(c_var1)), rep("prior", length(c_var2))),
     value = c(do.call("c", c_post), do.call("c", c_prior))
   )
+  return(df)
+}
+
+#' @export
+#' 
+plot_PriorPost <- function(fit, ...){
+  UseMethod("plot_PriorPost")
+}
+
+
+#' Plot Posterior over Prior 
+#'
+#' 
+#' @param fit An object of class \code{fitTK} returned by the function \code{fitTK()}.
+#' @param select A string selecting the parameters. Defaults is \code{"all"} and select all parameters.
+#' Deterministic parameters can be selected by setting \code{"deterministic"} and 
+#' stochastic parameter with \code{"stochastic"}.
+#' 
+#' @return An object of class \code{data.frame}.
+#' 
+#' @export
+#' 
+#' 
+plot_PriorPost.fitTK <- function(fit, select = "all"){
+  
+  df <- df_PriorPost(fit, select)
   
   ggplot(data = df, aes(value)) + 
     theme_classic() +
@@ -74,7 +100,6 @@ plot_PriorPost.fitTK <- function(fit, select = NULL){
     scale_x_log10() +
     geom_density(aes(group = interaction(parameter, type), fill = type), alpha = 0.5, color = NA) +
     facet_wrap(~parameter, scale = "free")
-
   
 }
 
