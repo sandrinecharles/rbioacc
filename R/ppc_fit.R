@@ -1,10 +1,32 @@
 #' @export
 #' 
-ppc <- function(x, ...){
-  UseMethod("ppc")
+#' @rdname ppc
+#' 
+df_ppc <- function(fit, ...){
+  UseMethod("df_ppc")
 }
 
-#' Posterior predictive check plot
+#' PPC data.frame
+#' 
+#' @rdname ppc
+#' 
+#' @param fit And object returned by fitTK
+#' 
+#' @export
+#' 
+df_ppc.fitTK <- function(fit){
+  df <- .df_for_plot(fit)
+  df$col_range <- ifelse(df$qinf95 > df$observation | df$qsup95 < df$observation, "out", "in")
+  return(df)
+}
+
+.percentage_ppc <- function(df_ppc){
+  sum(df_ppc$col_range == "in") / nrow(df_ppc) * 100
+}
+
+
+
+#' Posterior predictive check
 #'
 #' This is the generic \code{ppc} S3 method for plots of the predicted
 #' values along with 95\% credible intervals
@@ -20,20 +42,34 @@ ppc <- function(x, ...){
 #' values are low. That way we ensure green intervals do intersect the
 #' bisecting line.
 #' 
+#' @rdname ppc
+#' 
+#' @export
+#' 
+ppc <- function(fit, ...){
+  UseMethod("ppc")
+}
+
+
+#' PPC plot
+#' 
+#' @rdname ppc
+#' 
 #' @param fit And object returned by fitTK
 #' 
 #' @export
 #' 
 ppc.fitTK <- function(fit){
-# ppc_fitTK <- function(fit){
-    df <- .df_for_plot(fit)
+
+  df <- df_ppc(fit)
   
-  df$col_range <- ifelse(df$qinf95 > df$observation | df$qsup95 < df$observation, "out", "in")
+  percent_in <- round(.percentage_ppc(df), digits = 2)
   
   plt <- ggplot(data = df) + 
     theme_classic() +
     theme(legend.position="none") +
-    labs(x = "Observation", y = "Prediction") +
+    labs(x = "Observation", y = "Prediction",
+         subtitle = paste("PPC=", percent_in, "%")) +
     scale_colour_manual(values = c("green", "red")) +
     geom_abline(slope = 1) +
     geom_linerange(
