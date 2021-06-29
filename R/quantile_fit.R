@@ -18,6 +18,8 @@ quantile_table <- function(fit, probs = c(0.025, 0.5, 0.975)){
   if(ncol(fitMCMC$ke) == 2){
     ls$keg <- list(quantile(fitMCMC$ke[, 2],probs ))
     ls$sigmaGrowth <- list(quantile(fitMCMC$sigmaCGpred[, 2],probs ))
+    ls$gmax <- list(quantile(fitMCMC$gmax,probs))
+    ls$G0 <- list(quantile(fitMCMC$G0,probs))
   }
   if("km" %in% names(fitMCMC)){
     ls$km <- lapply(1:ncol(fitMCMC$km), function(i) quantile(fitMCMC$km[, i],probs ))
