@@ -39,7 +39,8 @@ bioacc_metric.fitTK <- function(fit, type = "k", route = "all"){
   
   df <- data.frame(do.call("cbind", ls_out))
   if(route != "all"){
-    df <- df[, route]
+    df <- as.data.frame(df[, route])
+    colnames(df) <- route
   }
   if(type == "k"){
     colnames(df) <- .switch_k(colnames(df))
