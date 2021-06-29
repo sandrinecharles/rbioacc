@@ -139,7 +139,9 @@
 }
 
 .df_quant95 <- function(x){
+  
   mat_quants = apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975))
+  
   df = data.frame(
     q50 = mat_quants[2,],
     qinf95 = mat_quants[1,],
