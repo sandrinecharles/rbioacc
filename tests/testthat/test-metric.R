@@ -20,14 +20,15 @@ test_that("bioacc_metric", {
   BFCk_MGS = bioacc_metric(fit_MGS, "k")
   BFCk_MGSG = bioacc_metric(fit_MGSG, "k")
   BFCk_CC = bioacc_metric(fit_CC, "k")
+  BFCk_CCw = bioacc_metric(fit_CC, "k", route = "w")
   # Check class
   expect_true(all(class(BFCk_MGS) == c("bioaccMetric", "data.frame")))
   expect_true(all(class(BFCk_MGSG) == c("bioaccMetric", "data.frame")))
   expect_true(all(class(BFCk_CC) == c("bioaccMetric", "data.frame")))
   # Check colnames
-  expect_true(all(colnames(BFCk_MGS) == c("w")))
-  expect_true(all(colnames(BFCk_MGSG) == c("w")))
-  expect_true(all(colnames(BFCk_CC) == c("w","s","pw")))
+  expect_true(all(colnames(BFCk_MGS) == c("BCFk")))
+  expect_true(all(colnames(BFCk_MGSG) == c("BCFk")))
+  expect_true(all(colnames(BFCk_CC) == c("BCFk","BSAFk","BCFpwk")))
   # Check class
   expect_true(all(class(plot(BFCk_MGS)) == c("gg", "ggplot")))
   expect_true(all(class(plot(BFCk_MGSG)) == c("gg", "ggplot")))
