@@ -25,7 +25,6 @@ df_ppc.fitTK <- function(fit){
 }
 
 
-
 #' Posterior predictive check
 #'
 #' This is the generic \code{ppc} S3 method for plots of the predicted
