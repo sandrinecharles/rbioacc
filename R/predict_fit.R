@@ -1,7 +1,8 @@
 #' Prediction function
 #' 
 #' @param fit An object of \code{stanfit}
-#' @param data A data set
+#' @param data A data set with one column \code{time} and 1 to 4 exposure 
+#' columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}
 #' 
 #' @export
 #' 
@@ -52,33 +53,36 @@ predict.fitTK <- function(fit, data){
     }
     R[,t] =  U[,t] / (E + M) ;
   }
-  D = matrix(NA, ncol = fitDATA$n_met, nrow = len_MCMC)
-  for(m in 1:fitDATA$n_met){
-    D[,m] =  fitMCMC$kem[,m] - (E + M) ;
+  if(n_met > 0){
+    D = matrix(NA, ncol = fitDATA$n_met, nrow = len_MCMC)
+    for(m in 1:n_met){
+      D[,m] =  fitMCMC$kem[,m] - (E + M) ;
+    }
   }
   # ACCUMULATION PHASE (0 =< t =< tacc)
   C0 <- fitDATA$C0
    
-  conc <- matrix(NA, ncol = lentp, nrow = len_MCMC)
+  CGobs_out <- rep(NA, len_MCMC*lentp*n_out)
+  dim(CGobs_out) <- c(len_MCMC,lentp,n_out)
+  
   if(n_met > 0){
-    met <-  rep(NA, len_MCMC*lentp*n_met)
-    dim(met) <- c(len_MCMC,lentp,n_met)
+    Cmet_out <-  rep(NA, len_MCMC*lentp*n_met)
+    dim(Cmet_out) <- c(len_MCMC,lentp,n_met)
   } else{
-    met <- NA
+    Cmet_out <- NA
   }
   
-   
   km <- fitMCMC$km
   kem <- fitMCMC$kem
   for(t in 1:rankacc){
     # Parent compound
-    conc[,t] = (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[t]
+    CGobs_out[,t,1] = (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[t]
     # Metabolites
     if(n_met > 0){
       for(m in 1:n_met){
-        met[,t,m] = km[,m] * (
+        Cmet_out[,t,m] = km[,m] * (
           (C0-R[t])/ D[,m] * (exp(-(E + M)*time[t])-exp(-kem[,m] * time[t])) +
-          R[t] / kem[,m] * (1 - exp(-(kem[,m] * time[t]))) 
+          R[t] / kem[,m] * (1 - exp(-(kem[,m] * time[t])))
         )
       }
     }
@@ -86,11 +90,11 @@ predict.fitTK <- function(fit, data){
   # DEPURATION PHASE (t > tacc)
   for(t in (rankacc+1):lentp){
     # Parent compound
-    conc[,t] = (C0 - R[t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]) ;
+    CGobs_out[,t,1] = (C0 - R[t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]) ;
     # Metabolites
     if(n_met > 0){
       for(m in 1:n_met){
-        met[,t,m] = km[m] * (
+        Cmet_out[,t,m] = km[m] * (
           (C0-R[t]) / D[m] * (exp(-(E + M) * time[t]) - exp(-kem[m] * time[t])) + 
           R[t] / kem[m] * (exp(-kem[m] * (time[t]-tacc)) - exp(-kem[m] * time[t])) +
           R[t] / D[m] * (exp(-(E+M)*(time[t]-tacc)) - exp(-kem[m] * (time[t] - tacc)))
@@ -100,20 +104,21 @@ predict.fitTK <- function(fit, data){
   }
   # GROWTH
   if(n_out == 2){
-    growth <- matrix(NA,  nrow = len_MCMC, ncol = lentp)
     G0 <- fitMCMC$G0
     gmax <- fitMCMC$gmax
     keg <- fitMCMC$ke[,2]
     for(t in 1:lentp){
-      growth[,t] = (G0 - gmax) * exp(-keg * time[t]) + gmax
+      CGobs_out[,t,2] = (G0 - gmax) * exp(-keg * time[t]) + gmax
     }
-  } else{
-    growth <- NA
   }
   
-  return(list(
-    conc = conc,
-    met = met,
-    growth = growth
-  ))
+  predict_out <- list(
+    time = time,
+    CGobs_out = CGobs_out,
+    Cmet_out = Cmet_out
+  )
+  
+  class(predict_out) <- append("predictTK", class(predict_out))
+  
+  return(predict_out)
 }

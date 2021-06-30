@@ -138,9 +138,9 @@
   
 }
 
-.df_quant95 <- function(x){
+.df_quant95 <- function(x,...){
   
-  mat_quants = apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975))
+  mat_quants = apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975), ...)
   
   df = data.frame(
     q50 = mat_quants[2,],
@@ -167,6 +167,13 @@
     df <- do.call("rbind", ls)
   }
   df <- df[df$observation != Inf,]
+  df$variable <-  id
+  return(df)
+}
+
+.add_data_predict = function(df_quant95,tp,id){
+  df_quant95$time <- tp
+  df <- df_quant95
   df$variable <-  id
   return(df)
 }
