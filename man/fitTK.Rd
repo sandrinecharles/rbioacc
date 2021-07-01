@@ -2,18 +2,29 @@
 % Please edit documentation in R/fitTK.R
 \name{fitTK}
 \alias{fitTK}
-\title{Bayesian inference of TK model with Stan}
+\alias{fitTK.stanTKdataCST}
+\alias{fitTK2.stanTKdataVAR}
+\title{Posterior predictive check}
 \usage{
-fitTK(stanTKdata, ...)
+fitTK(fit, ...)
+
+\method{fitTK}{stanTKdataCST}(stanTKdata, ...)
+
+fitTK2.stanTKdataVAR(stanTKdata, ...)
 }
 \arguments{
-\item{stanTKdata}{List of Data require for computing}
-
 \item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
+
+\item{stanTKdata}{List of Data require for computing}
 }
 \value{
-An object of class \code{fitTK} returned by \code{rstan::sampling}
+An object of class \code{fitTK} containing two object: \code{stanTKdata}
+the data set used for inference and \code{stanfit}  returned by \code{rstan::sampling}
 }
 \description{
+Posterior predictive check
+
 Bayesian inference of TK model with Stan
+
+Bayesian inference of TK model with variable exposure profile (BETA version)
 }

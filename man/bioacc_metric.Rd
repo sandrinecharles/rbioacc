@@ -7,7 +7,15 @@
 \usage{
 bioacc_metric(fit, ...)
 
-\method{bioacc_metric}{fitTK}(fit, object)
+\method{bioacc_metric}{fitTK}(fit, type = "k", route = "all")
+}
+\arguments{
+\item{fit}{an \code{stanFit} object}
+
+\item{type}{a string with the type of metric: \code{k} for the kinetics
+BioConcentration Factor, \code{ss} for the steady state BioConcentration Factor.}
+
+\item{object}{a \code{data.frame} use for within \code{modelData}}
 }
 \description{
 Biaccumulation metrics
