@@ -60,7 +60,7 @@ plot.bioaccMetric <- function(df){
 #' 
 exposure_names <- function(object){
   col_exposure <- .index_col_exposure(object)
-  sub <- substring(names(object[,col_exposure]), first = 4)
+  sub <- substring(names(object[col_exposure]), first = 4)
   return(sub)
 }
 
