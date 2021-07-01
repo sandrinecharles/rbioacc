@@ -15,7 +15,6 @@ equations <- function(fit, object){
   growth <- (fit$stanTKdata$n_out == 2)
   
   whichexpeq <- exposure_names(object)
-  #print(whichexpeq)
   parkexpeq <- NULL
   for (i in 1:nexp) {
     parkexpeq[i] <- paste0("ku", unlist(whichexpeq[i]))

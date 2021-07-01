@@ -17,6 +17,8 @@ psrf <- function(fit){
   if(ncol(fitMCMC$ke) == 2){
     ls$keg <- rstan::Rhat(fitMCMC$ke[, 2])
     ls$sigmaGrowth <- rstan::Rhat(fitMCMC$sigmaCGpred[, 2])
+    ls$gmax <- rstan::Rhat(fitMCMC$gmax)
+    ls$G0 <- rstan::Rhat(fitMCMC$G0)
   }
   if("km" %in% names(fitMCMC)){
     ls$km <- lapply(1:ncol(fitMCMC$km), function(i) rstan::Rhat(fitMCMC$km[, i]))

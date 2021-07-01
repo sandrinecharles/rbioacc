@@ -8,24 +8,47 @@ bioacc_metric <- function(fit, ...){
 
 #' Biaccumulation metrics
 #' 
+#' @param fit an \code{stanFit} object
+#' @param object a \code{data.frame} use for within \code{modelData}
+#' @param type a string with the type of metric: \code{k} for the kinetics
+#' BioConcentration Factor, \code{ss} for the steady state BioConcentration Factor.
+#' 
 #' @rdname bioacc_metric
 #' 
 #' @export
 #' 
-bioacc_metric.fitTK <- function(fit, object){
+bioacc_metric.fitTK <- function(fit, type = "k", route = "all"){
   
   fitMCMC <- rstan::extract(fit[["stanfit"]])
   
-  if(!is.null(fitMCMC$km)){
-    sum_ <- apply(fitMCMC$ke, 1, sum) + apply(fitMCMC$km, 1, sum)
-  } else{
-    sum_ <- apply(fitMCMC$ke, 1, sum)
+  if(type == "k"){
+    if(!is.null(fitMCMC$km)){
+      sum_ <- apply(fitMCMC$ke, 1, sum) + apply(fitMCMC$km, 1, sum)
+    } else{
+      sum_ <- apply(fitMCMC$ke, 1, sum)
+    }
+    ls_out <- lapply(1:ncol(fitMCMC$ku), function(i) fitMCMC$ku[,i] / sum_)
+  }
+  if(type == "ss"){
+    rankacc <- fit$stanTKdata$rankacc
+    conc_sim <- fitMCMC$CGobs_out[,rankacc,1]
+    Cexp <- fit$stanTKdata$Cexp
+    ls_out <- lapply(1:ncol(Cexp), function(i) conc_sim / Cexp[rankacc, i])
+  }
+  names(ls_out) <- exposure_names(fit$stanTKdata$origin_data)
+  
+  df <- data.frame(do.call("cbind", ls_out))
+  if(route != "all"){
+    df <- as.data.frame(df[, route])
+    colnames(df) <- route
+  }
+  if(type == "k"){
+    colnames(df) <- .switch_k(colnames(df))
+  }
+  if(type == "ss"){
+    colnames(df) <- .switch_ss(colnames(df))
   }
   
-  BCF_ku <- lapply(1:ncol(fitMCMC$ku), function(i) fitMCMC$ku[,i] / sum_)
-  names(BCF_ku) <- exposure_names(object)
-  
-  df <- data.frame(do.call("cbind", BCF_ku))
   class(df) <- append("bioaccMetric", class(df))
   
   return(df)
@@ -37,18 +60,18 @@ bioacc_metric.fitTK <- function(fit, object){
 #' 
 plot.bioaccMetric <- function(df){
 
-  df_plt <- .fonte(df, "exposure","BCF_ku")
+  df_plt <- .fonte(df, "exposure","value")
   
-  df_quant <- .fonte(.df_quant95(df), "Quantile", "BCF_ku")
+  df_quant <- .fonte(.df_quant95(df), "Quantile", "value")
   df_quant$exposure <- rep(colnames(df), 3)
   
   plt <- ggplot() + 
     theme_minimal() +
-    labs(x = "BCF", y = "Density") +
+    labs(x = "Bioacc Metric", y = "Density") +
     geom_density(data = df_plt,
-                 aes(x = BCF_ku, fill = exposure), fill = "grey", color = NA) +
+                 aes(x = value, fill = exposure), fill = "grey", color = NA) +
     geom_vline(data = df_quant,
-               aes(xintercept = BCF_ku, group = Quantile), linetype = "dashed") +
+               aes(xintercept = value, group = Quantile), linetype = "dashed") +
     facet_wrap(~exposure, scale = "free")
     
   return(plt)
@@ -60,19 +83,26 @@ plot.bioaccMetric <- function(df){
 #' 
 exposure_names <- function(object){
   col_exposure <- .index_col_exposure(object)
-  sub <- substring(names(object[col_exposure]), first = 4)
+  sub <- substring(colnames(object)[col_exposure], first = 4)
   return(sub)
 }
 
-
-
-# ------------------- INTERNAL
-
-.fonte <- function(df, names_to, values_to){
-  dfout <- data.frame(
-    names_to = rep(colnames(df), each = nrow(df)),
-    values_to = do.call("c", lapply(1:ncol(df), function(i) df[,i]))
-  )
-  colnames(dfout) <- c(names_to, values_to)
-  return(dfout)
+# ---- INTERNAL
+.switch_k <- function(x){
+  sapply(seq_along(x), function(i){
+    switch(x[i],
+           "w"="BCFk",
+           "s"="BSAFk",
+           "f"="BMFk",
+           "pw"="BCFpwk")
+  })
+}
+.switch_ss <- function(x){
+  sapply(seq_along(x), function(i){
+    switch(x[i],
+           "w"="BCFss",
+           "s"="BSAFss",
+           "f"="BMFss",
+           "pw"="BCFpwss")
+  })
 }

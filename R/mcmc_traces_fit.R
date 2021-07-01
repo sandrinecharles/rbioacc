@@ -17,7 +17,8 @@ mcmcTraces <- function(fit, plots = c("all", "deterministic", "stochastic")){
   } else {
     corr <- ggmcmc::ggs(fit[["stanfit"]], family = "^k|^g|^sigma")
   }
-  plots <- ggmcmc::ggs_traceplot(corr, greek = TRUE) + scale_colour_manual(values = alpha(c("#333333", "#ee7202", "#63ad00", "#333333"), 1)) +
+  plots <- ggmcmc::ggs_traceplot(corr, greek = TRUE) +
+    scale_colour_manual(values = alpha(c("#333333", "#ee7202", "#63ad00", "#333333"), 1)) +
     theme(legend.title = element_blank())
   
   return(plots)
