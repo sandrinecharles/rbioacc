@@ -76,13 +76,13 @@ predict.fitTK <- function(fit, data){
   kem <- fitMCMC$kem
   for(t in 1:rankacc){
     # Parent compound
-    CGobs_out[,t,1] = (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[t]
+    CGobs_out[,t,1] = (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[,t]
     # Metabolites
     if(n_met > 0){
       for(m in 1:n_met){
         Cmet_out[,t,m] = km[,m] * (
           (C0-R[t])/ D[,m] * (exp(-(E + M)*time[t])-exp(-kem[,m] * time[t])) +
-          R[t] / kem[,m] * (1 - exp(-(kem[,m] * time[t])))
+          R[,t] / kem[,m] * (1 - exp(-(kem[,m] * time[t])))
         )
       }
     }
@@ -90,14 +90,14 @@ predict.fitTK <- function(fit, data){
   # DEPURATION PHASE (t > tacc)
   for(t in (rankacc+1):lentp){
     # Parent compound
-    CGobs_out[,t,1] = (C0 - R[t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]) ;
+    CGobs_out[,t,1] = (C0 - R[,t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]) ;
     # Metabolites
     if(n_met > 0){
       for(m in 1:n_met){
         Cmet_out[,t,m] = km[m] * (
           (C0-R[t]) / D[m] * (exp(-(E + M) * time[t]) - exp(-kem[m] * time[t])) + 
-          R[t] / kem[m] * (exp(-kem[m] * (time[t]-tacc)) - exp(-kem[m] * time[t])) +
-          R[t] / D[m] * (exp(-(E+M)*(time[t]-tacc)) - exp(-kem[m] * (time[t] - tacc)))
+          R[,t] / kem[m] * (exp(-kem[m] * (time[t]-tacc)) - exp(-kem[m] * time[t])) +
+          R[,t] / D[m] * (exp(-(E+M)*(time[t]-tacc)) - exp(-kem[m] * (time[t] - tacc)))
         )
       }
     }
