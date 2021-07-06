@@ -6,8 +6,8 @@
 \title{Male \code{Gammarus fossarum} exposed to Hg spiked water.
 Three exposure concentrations were tested in triplicates. The duration of the
 accumulation phase is 4 days for 0.0000708021 and 0.000283208
-\eqn{\mu g.m L^{-1}}.} exposure concentrations, and 7 days for 0.000141604
-\eqn{\mu g.m L^{-1}}.} exposure concentration.}
+\eqn{\mu g.m L^{-1}} exposure concentrations, and 7 days for 0.000141604
+\eqn{\mu g.m L^{-1}} exposure concentration.}
 \format{
 A dataframe with 72 observations on the following four variables:
 \describe{
@@ -28,8 +28,8 @@ data(Male_Gammarus_Merged)
 Male \code{Gammarus fossarum} exposed to Hg spiked water.
 Three exposure concentrations were tested in triplicates. The duration of the
 accumulation phase is 4 days for 0.0000708021 and 0.000283208
-\eqn{\mu g.m L^{-1}}.} exposure concentrations, and 7 days for 0.000141604
-\eqn{\mu g.m L^{-1}}.} exposure concentration.
+\eqn{\mu g.m L^{-1}} exposure concentrations, and 7 days for 0.000141604
+\eqn{\mu g.m L^{-1}} exposure concentration.
 }
 \references{
 Ciccia, T. (2019). Accumulation et devenir du mercure chez
