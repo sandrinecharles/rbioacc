@@ -61,246 +61,173 @@ ppc(fit_MGS)
 
 ## Male Gammarus Merged
 
-```{r fitMGM708, cache=TRUE, results="hide"}
+```{r fitMGM708, cache=TRUE, results="hide", eval=FALSE}
 data("Male_Gammarus_Merged")
 data_MGM708 <- Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 7.08021e-05, ]
 modelData_MGM708 <- modelData(data_MGM708, time_accumulation = 4)
 fit_MGM708 <- fitTK(modelData_MGM708, iter = 10000)
 ```
 
-```{r statMGM708}
+```{r statMGM708, eval=FALSE}
 quantile_table(fit_MGM708)
 ```
 
-```{r plotMGM708, fig.height=4, fig.width=5}
+```{r plotMGM708, fig.height=4, fig.width=5, eval=FALSE}
 plot(fit_MGM708)
 ```
 
-```{r ppcMGM708, fig.height=4, fig.width=5}
+```{r ppcMGM708, fig.height=4, fig.width=5, eval=FALSE}
 ppc(fit_MGM708)
 ```
 
-```{r fitMGM141, cache=TRUE, results="hide"}
+```{r fitMGM141, cache=TRUE, results="hide", eval=FALSE}
 data_MGM141 <- Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 1.41604e-04, ]
 modelData_MGM141 <- modelData(data_MGM141, time_accumulation = 7)
 fit_MGM141 <- fitTK(modelData_MGM141, iter = 20000)
 ```
 
-```{r statMGM141}
+```{r statMGM141, eval=FALSE}
 quantile_table(fit_MGM141)
 ```
 
-```{r plotMGM141, fig.height=4, fig.width=5}
+```{r plotMGM141, fig.height=4, fig.width=5, eval=FALSE}
 plot(fit_MGM141)
 ```
 
-```{r ppcMGM141, fig.height=4, fig.width=5}
+```{r ppcMGM141, fig.height=4, fig.width=5, eval=FALSE}
 ppc(fit_MGM141)
 ```
 
-```{r fitMGM283, cache=TRUE, results="hide"}
+```{r fitMGM283, cache=TRUE, results="hide", eval=FALSE}
 data_MGM283 <- Male_Gammarus_Merged[Male_Gammarus_Merged$expw == 2.83208e-04, ]
 modelData_MGM283 <- modelData(data_MGM283, time_accumulation = 4)
 fit_MGM283 <- fitTK(modelData_MGM283, iter = 10000)
 ```
 
-```{r statMGM283}
+```{r statMGM283, eval=FALSE}
 quantile_table(fit_MGM283)
 ```
 
-```{r plotMGM283, fig.height=4, fig.width=5}
+```{r plotMGM283, fig.height=4, fig.width=5, eval=FALSE}
 plot(fit_MGM283)
 ```
 
-```{r ppcMGM283, fig.height=4, fig.width=5}
+```{r ppcMGM283, fig.height=4, fig.width=5, eval=FALSE}
 ppc(fit_MGM283)
 ```
 
 ## Male Gammarus seanine with growth
 
-```{r fitMGSG, cache=TRUE, results="hide"}
+```{r fitMGSG, eval=FALSE}
 data("Male_Gammarus_seanine_growth")
 modelData_MGSG <- modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417)
 fit_MGSG <- fitTK(modelData_MGSG, iter = 10000)
 ```
 
 
-```{r statsMGSG}
+```{r statsMGSG, eval=FALSE}
 quantile_table(fit_MGSG)
 ```
 
-```{r plotMGSG, fig.height=6, fig.width=7}
+```{r plotMGSG, fig.height=6, fig.width=7, eval=FALSE}
 plot(fit_MGSG)
 ```
 
-```{r ppcMGSG, fig.height=6, fig.width=7}
+```{r ppcMGSG, fig.height=6, fig.width=7, eval=FALSE}
 ppc(fit_MGSG)
 ```
 
 ## Oncorhynchus
 
-```{r fitOT440, cache=TRUE, results="hide"}
+```{r fitOT440, cache=TRUE, results="hide", eval=FALSE}
 data("Oncorhynchus_two") #  Pimephales_two
 data_OT440 = Oncorhynchus_two[Oncorhynchus_two$expw == 0.00440,]
 modelData_OT440 <- modelData(data_OT440, time_accumulation = 49)
 fit_OT440 <- fitTK(modelData_OT440, iter = 10000)
 ```
 
-```{r statOT440}
+```{r statOT440, eval=FALSE}
 quantile_table(fit_OT440)
 ```
 
-```{r plotOT440, fig.height=4, fig.width=5}
+```{r plotOT440, fig.height=4, fig.width=5, eval=FALSE}
 plot(fit_OT440)
 ```
 
-```{r ppcOT440, fig.height=4, fig.width=5}
+```{r ppcOT440, fig.height=4, fig.width=5, eval=FALSE}
 ppc(fit_OT440)
 ```
 
-```{r fitOT041, cache=TRUE, results="hide"}
+```{r fitOT041, cache=TRUE, results="hide", eval=FALSE}
 data_OT041 <- Oncorhynchus_two[Oncorhynchus_two$expw == 0.00041,]
 modelData_OT041 <- modelData(data_OT041, time_accumulation = 49)
 fit_OT041 <- fitTK(modelData_OT041, iter = 10000)
 ```
 
-```{r statOT041}
+```{r statOT041, eval=FALSE}
 quantile_table(fit_OT041)
 ```
 
-```{r plotOT041, fig.height=4, fig.width=5}
+```{r plotOT041, fig.height=4, fig.width=5, eval=FALSE}
 plot(fit_OT041)
 ```
 
-```{r ppcOT041, fig.height=4, fig.width=5}
+```{r ppcOT041, fig.height=4, fig.width=5, eval=FALSE}
 ppc(fit_OT041)
 ```
 
 ## Chironomus benzo-a-pyrene
 
-```{r fitCB, cache=TRUE, results="hide"}
+```{r fitCB, cache=TRUE, results="hide", eval=FALSE}
 data("Chironomus_benzoapyrene")
 modelData_CB <- modelData(Chironomus_benzoapyrene, time_accumulation = 3)
 modelData_CB$unifMax = modelData_CB$unifMax  * 100
 fit_CB <- fitTK(modelData_CB, iter = 10000)
 ```
  
-```{r statCB}
+```{r statCB, eval=FALSE}
 quantile_table(fit_CB)
 ```
 
-```{r plotCB, fig.height=4, fig.width=5}
+```{r plotCB, fig.height=4, fig.width=5, eval=FALSE}
 plot(fit_CB)
 ```
 
-```{r ppcCB, fig.height=4, fig.width=5}
+```{r ppcCB, fig.height=4, fig.width=5, eval=FALSE}
 ppc(fit_CB)
 ```
 
+# Prediction
 
-# Time-variable exposure profile
+```{r predictMGS, eval=FALSE}
+data("Male_Gammarus_Single")
+modelData_MGS <- modelData(Male_Gammarus_Single, time_accumulation = 4)
+fit_MGS <- fitTK(modelData_MGS, iter = 5000, chains = 3)
 
-## Load variable data
-
-
-```{r}
-library(rbioacc)
-
-
+# Data 4 prediction should respect the exposure routes
+data_4pred <- data.frame( time = 1:25, expw = 4e-5 )
+predict_MGS <- predict(fit_MGS, data_4pred)
+plot(predict_MGS)
 ```
 
-
-```{r}
-library(rbioacc)
-#
-# --------------
-Exposure_Sialis_lutaria <- read.csv("C:/Users/virgi/OneDrive/Documents/PACKAGES/rbioacc/data-raw/Rubach2010_ETC_Exposure_Sialis_lutaria.csv", sep=";")
-Internal_Sialis_lutaria <- read.csv("C:/Users/virgi/OneDrive/Documents/PACKAGES/rbioacc/data-raw/Rubach2010_ETC_Internal_Sialis_lutaria.csv", sep=";")
-
-df_exposure = Exposure_Sialis_lutaria
-df_internal = Internal_Sialis_lutaria
-
-Cexp_rmNA = df_exposure$Cwater
-dim(Cexp_rmNA) = c(nrow(df_exposure), 1 )
-
-CGobs = df_internal$Cinternal
-dim(CGobs) = c(nrow(df_internal), 1, 1)
-
-Cmet = matrix(0, ncol = 0, nrow =  nrow(df_internal))
-dim(Cmet) = c(nrow(df_internal), 0, 1)
-
-y0 = 0 ; dim(y0) = 1
-
-modelData_ODE_MGS <- list(
-  n_rep = 1,
-  # ---
-  lentp = nrow(df_internal),
-  tp = df_internal$time,
-  
-  n_exp = 1,
-  
-  lentp_rmNA = nrow(df_exposure),
-  tp_rmNA = df_exposure$time,
-  Cexp_rmNA = Cexp_rmNA,
-  
-  n_out = 1,
-  
-  CGobs = CGobs,
-    
-  n_met = 0,
-  Cmet = Cmet,
-  
-  y0 = y0,
-  t0 = -0.001,
-  
-  gmaxsup = 1,
-  rankacc = nrow(df_exposure),
-  tacc = max(df_exposure$time),
-  C0 = 0,
-  
-  unifMax = 10,
-  
-  len_vt = nrow(df_internal),
-  vt =   df_internal$time
-    
-)
-
-fitODE_MGS <- fitTK2(modelData_ODE_MGS, iter = 1000)
+```{r predictMGSG, eval=FALSE}
+# data("Male_Gammarus_seanine_growth")
+# modelData_MGSG <- modelData(Male_Gammarus_seanine_growth, time_accumulation = 4)
+# fit_MGSG <- fitTK(modelData_MGSG, iter = 5000, chains = 3)
+# 
+# # Data 4 prediction should respect the exposure routes
+# data_4pred <- data.frame( time = 1:25, expw = 18 )
+# predict_MGSG <- predict(fit_MGSG, data_4pred)
+# plot(predict_MGSG)
 ```
 
+```{r predictCC, eval=FALSE}
+data("Chiro_Creuzot")
+modelData_CC <- modelData(Male_Gammarus_Single, time_accumulation = 4)
+fit_CC <- fitTK(modelData_CC, iter = 5000, chains = 3)
 
-```{r}
-library(rstan)
-
-fitMCMC = rstan::extract(fitODE_MGS$stanfit)
-
-
-.df_quant95 <- function(x){
-  mat_quants = apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975))
-  df = data.frame(
-    q50 = mat_quants[2,],
-    qinf95 = mat_quants[1,],
-    qsup95 = mat_quants[3,]
-  )
-  return(df)
-}
-
-df_quant = .df_quant95(fitMCMC$CGpred)
-df_quant$time = df_internal$time
-df_quant$Cinternal = df_internal$Cinternal
-
-library(ggplot2)
-library(gridExtra)
-plt_internal = ggplot(data = df_quant) +
-  theme_minimal() +
-  geom_point(aes(x = time, y = Cinternal)) +
-  geom_ribbon(aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey80")+
-  geom_line(aes(x = time, y = q50), color = "orange") 
-
-plt_exposure = ggplot(data = df_exposure) + 
-  theme_minimal() +
-  geom_line(aes(x = time, y = Cwater))
-
-grid.arrange(plt_internal, plt_exposure, layout_matrix = rbind(1,1,2) )
+# Data 4 prediction should respect the exposure routes
+data_4pred <- data.frame( time = 1:25, expw = 18, exps = 1200, exppw = 15 )
+predict_CC <- predict(fit_CC, data_4pred)
+plot(predict_CC)
 ```
-
