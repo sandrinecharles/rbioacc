@@ -26,7 +26,7 @@ predict.fitTK <- function(fit, data){
   
   if(!(all(colnames(Cexp) %in% colnames(Cexp_origin)) && 
        all(colnames(Cexp_origin) %in% colnames(Cexp)))){
-    break("Exposure routes differ between 'fit' and 'data'")
+    stop("Exposure routes differ between 'fit' and 'data'")
   }
   
   n_exp <- ncol(Cexp)
