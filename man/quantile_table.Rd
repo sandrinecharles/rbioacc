@@ -10,7 +10,7 @@ quantile_table(fit, probs = c(0.025, 0.5, 0.975))
 \item{fit}{An object of class \code{fitTK}}
 
 \item{probs}{Scalar or Vector of quantiles.
-Default is 0.025, 0.5 and 0.975 givin median and 95\○\% credible interval}
+Default is 0.025, 0.5 and 0.975 giving median and 95\% credible interval}
 }
 \description{
 Quantiles of parameters
