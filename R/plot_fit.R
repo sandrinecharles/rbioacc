@@ -24,9 +24,9 @@ plot.fitTK <- function(fit){
     labs(x = "Time", y = "Concentration") +
     # scale_y_continuous(limits = c(0,NA)) +
     geom_ribbon(
-      aes(x = time, ymin = qinf95, ymax = qsup95), fill = "grey80") +
-    geom_line(aes(x = time, y = q50), color = "orange") +
-    geom_point(aes(x = time, y = observation )) + 
+      aes_string(x = 'time', ymin = 'qinf95', ymax = 'qsup95'), fill = "grey80") +
+    geom_line(aes_string(x = 'time', y = 'q50'), color = "orange") +
+    geom_point(aes_string(x = 'time', y = 'observation' )) + 
     facet_wrap(~variable, scales = "free")
 
   return(plt)

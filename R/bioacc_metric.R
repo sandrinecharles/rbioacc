@@ -69,10 +69,10 @@ plot.bioaccMetric <- function(df){
     theme_minimal() +
     labs(x = "Bioacc Metric", y = "Density") +
     geom_density(data = df_plt,
-                 aes(x = value, fill = exposure), fill = "grey", color = NA) +
+                 aes_string(x = 'value', fill = 'exposure'), fill = "grey", color = NA) +
     geom_vline(data = df_quant,
-               aes(xintercept = value, group = Quantile), linetype = "dashed") +
-    facet_wrap(~exposure, scale = "free")
+               aes_string(xintercept = 'value', group = 'Quantile'), linetype = "dashed") +
+    facet_wrap(~exposure, scales = "free")
     
   return(plt)
 }
