@@ -32,6 +32,7 @@ Imports:
     GGally,
     loo,
     stringr,
+    stats,
     zoo
 LinkingTo: 
     BH (>= 1.66.0),

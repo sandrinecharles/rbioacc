@@ -17,7 +17,7 @@ modelData <- function(object, ...){
 #' @rdname modelData
 #' 
 #' @export
-#' 
+#' @importFrom stats na.omit
 modelData.data.frame <- function(object, time_accumulation, ...){
   
   .check_modelData_object(object)

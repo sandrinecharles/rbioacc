@@ -14,7 +14,7 @@ df_PriorPost <- function(fit, ...){
 #' @return An object of class \code{data.frame}
 #' 
 #' @export
-#' 
+#' @importFrom stats runif
 #' 
 df_PriorPost.fitTK <- function(fit, select = "all"){
   fitMCMC <- rstan::extract(fit[["stanfit"]])

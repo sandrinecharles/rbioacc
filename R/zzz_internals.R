@@ -138,6 +138,7 @@
   
 }
 
+#' @importFrom stats quantile
 .df_quant95 <- function(x,...){
   
   mat_quants = apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975), ...)
