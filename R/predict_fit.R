@@ -2,15 +2,16 @@
 #' 
 #' @param fit An object of \code{stanfit}
 #' @param data A data set with one column \code{time} and 1 to 4 exposure 
+#' @param mcmc_size
 #' columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}
 #' 
 #' @export
 #' 
-predict.fitTK <- function(fit, data){
+predict.fitTK <- function(fit, data, mcmc_size = NULL){
   
   fitDATA <- fit[["stanTKdata"]]
   fitMCMC <- rstan::extract(fit[["stanfit"]])
-  
+
   n_met <- fitDATA$n_met
   len_MCMC <- nrow(fitMCMC$ku)
   # Exposure match
@@ -37,6 +38,9 @@ predict.fitTK <- function(fit, data){
   
   tacc <- fitDATA$tacc
   rankacc <- match(tacc, time)
+  if(is.na(rankacc)){
+    stop("time for accumulation should be in data time vector")
+  }
   
   if(n_met == 0){
     M = 0
