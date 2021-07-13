@@ -72,17 +72,17 @@ ppc.fitTK <- function(fit){
     scale_colour_manual(values = c("green", "red")) +
     geom_abline(slope = 1) +
     geom_linerange(
-      aes(x = observation,
-          ymin = qinf95,
-          ymax = qsup95,
-          group = replicate,
-          color = col_range)#,
+      aes_string(x = 'observation',
+          ymin = 'qinf95',
+          ymax = 'qsup95',
+          group = 'replicate',
+          color = 'col_range')#,
       # position = position_dodge(width=0.5)
       ) +
     geom_point(
-      aes(x = observation,
-          y = q50,
-          group = replicate)#,
+      aes_string(x = 'observation',
+          y = 'q50',
+          group = 'replicate')#,
       # position = position_dodge(width=0.5)
       ) + 
     facet_wrap(~variable, scales = "free")

@@ -2,6 +2,8 @@
 #' 
 #' @param object An object of class \code{data.frame}
 #' @param time_accumulation A scalar givin accumulation time
+#' @param elimination_rate A scalar for the elimination rate. Default is \code{NA}.
+#' To remove elimination rate, set \code{elimination_rate = 0}.
 #' @param \dots Further arguments to be passed to generic methods
 #' 
 #' @export
@@ -17,8 +19,8 @@ modelData <- function(object, ...){
 #' @rdname modelData
 #' 
 #' @export
-#' 
-modelData.data.frame <- function(object, time_accumulation, ...){
+#' @importFrom stats na.omit
+modelData.data.frame <- function(object, time_accumulation, elimination_rate = NA){
   
   .check_modelData_object(object)
   
@@ -29,12 +31,18 @@ modelData.data.frame <- function(object, time_accumulation, ...){
   # PRIORS ENLEVER - LA CONCENTRATION MAX !!!
   rtrn_ls$unifMax = 500 * max(object$conc, na.rm = TRUE)
   
+  if(!is.na(elimination_rate)){
+    rtrn_ls$elim_rate = elimination_rate
+  } else{
+    rtrn_ls$elim_rate = Inf
+  }
+  
   ########################
   # 0. GENERAL TIME VECTOR
   rtrn_ls$tp <- sort(unique(object$time))
   rtrn_ls$lentp <- length(rtrn_ls$tp)
   
-  # 1. HANDLE REPLICATE
+  # 1. Handle Replicate
   ls_object <- base::split(object, object$replicate)
   rtrn_ls$n_rep <- length(ls_object)
   

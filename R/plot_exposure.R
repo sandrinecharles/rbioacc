@@ -19,8 +19,8 @@ plot_exposure <- function(object){
 
   plt <- ggplot(data = df) + 
     theme_classic() +
-    geom_line(aes(x = time, y = exposure)) +
-    facet_wrap(~route, scale = "free")
+    geom_line(aes_string(x = 'time', y = 'exposure')) +
+    facet_wrap(~route, scales = "free")
   
   return(plt)
 }

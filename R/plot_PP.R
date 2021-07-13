@@ -14,7 +14,7 @@ df_PriorPost <- function(fit, ...){
 #' @return An object of class \code{data.frame}
 #' 
 #' @export
-#' 
+#' @importFrom stats runif
 #' 
 df_PriorPost.fitTK <- function(fit, select = "all"){
   fitMCMC <- rstan::extract(fit[["stanfit"]])
@@ -94,12 +94,12 @@ plot_PriorPost.fitTK <- function(fit, select = "all"){
   
   df <- df_PriorPost(fit, select)
   
-  ggplot(data = df, aes(value)) + 
+  ggplot(data = df, aes_string('value')) + 
     theme_classic() +
     scale_fill_manual(values = c("orange", "grey")) +
     scale_x_log10() +
-    geom_density(aes(group = interaction(parameter, type), fill = type), alpha = 0.5, color = NA) +
-    facet_wrap(~parameter, scale = "free")
+    geom_density(aes_string(group = interaction('parameter', 'type'), fill = 'type'), alpha = 0.5, color = NA) +
+    facet_wrap(~parameter, scales = "free")
   
 }
 
