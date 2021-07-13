@@ -17,7 +17,8 @@ equations <- function(fit, object){
   whichexpeq <- exposure_names(object)
   parkexpeq <- NULL
   for (i in 1:nexp) {
-    parkexpeq[i] <- paste0("ku", unlist(whichexpeq[i]))
+    exp <- unlist(whichexpeq[i])
+    parkexpeq[i] <- paste0("ku", exp, "\\times c", exp)
   }
 
   Ueq <- stringr::str_c(parkexpeq, collapse = "+")
