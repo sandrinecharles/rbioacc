@@ -31,6 +31,8 @@ data {
   real<lower=0> tacc ;
   real<lower=0> C0 ;
   
+  real elim_rate ;
+  
   real unifMax ;
   int<lower=0> len_vt;
   vector[len_vt] vt ;
@@ -78,7 +80,11 @@ transformed parameters{
   } else{
      M = sum(km) ;
   }
-  E = sum(ke) ;
+  if(!is_inf(elim_rate)){
+    E = elim_rate ;
+  } else{
+    E = sum(ke) ;
+  }
   for(t in 1:lentp){
     // real operator*(row_vector x, vector y)
     U[t] =  Cexp[t,1:n_exp] * ku ;
