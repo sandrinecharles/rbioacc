@@ -18,6 +18,7 @@ df_PriorPost <- function(fit, ...){
 #' 
 df_PriorPost.fitTK <- function(fit, select = "all"){
   fitMCMC <- rstan::extract(fit[["stanfit"]])
+  elim_rate <- fit[["stanTKdata"]]$elim_rate
   lengthMCMC <- nrow(fitMCMC$ku)
   
   ls_post <- list()
@@ -27,12 +28,13 @@ df_PriorPost.fitTK <- function(fit, select = "all"){
     ls_post$ku <- lapply(1:ncol(fitMCMC$ku), function(i) fitMCMC$ku[, i] )
     ls_prior$ku <- lapply(1:ncol(fitMCMC$ku), function(i) 10^runif(lengthMCMC, -5, 5))
     
-    ls_post$kee <- list(fitMCMC$ke[, 1] )
-    ls_prior$kee <- list(10^runif(lengthMCMC, -5, 5))
-    
-    if(ncol(fitMCMC$ke) == 2){
-      ls_post$keg <- list(fitMCMC$ke[, 2] )
-      ls_prior$keg <- list(10^runif(lengthMCMC, -5, 5))
+    if(is.infinite(elim_rate)){
+      ls_post$kee <- list(fitMCMC$ke[, 1] )
+      ls_prior$kee <- list(10^runif(lengthMCMC, -5, 5))
+      if(ncol(fitMCMC$ke) == 2){
+        ls_post$keg <- list(fitMCMC$ke[, 2] )
+        ls_prior$keg <- list(10^runif(lengthMCMC, -5, 5))
+      }
     }
     if("km" %in% names(fitMCMC)){
       ls_post$km <- lapply(1:ncol(fitMCMC$km), function(i) fitMCMC$km[, i] )
@@ -94,11 +96,13 @@ plot_PriorPost.fitTK <- function(fit, select = "all"){
   
   df <- df_PriorPost(fit, select)
   
+  df$group <- paste0(df$parameter, df$type)
+  
   ggplot(data = df, aes_string('value')) + 
     theme_classic() +
     scale_fill_manual(values = c("orange", "grey")) +
     scale_x_log10() +
-    geom_density(aes_string(group = interaction('parameter', 'type'), fill = 'type'), alpha = 0.5, color = NA) +
+    geom_density(aes_string(group = 'group', fill = 'type'), alpha = 0.5, color = NA) +
     facet_wrap(~parameter, scales = "free")
   
 }
