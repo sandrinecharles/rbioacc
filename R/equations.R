@@ -11,7 +11,7 @@ equations <- function(fit, object){
   
   nexp <- fit$stanTKdata$n_exp
   nmet <- fit$stanTKdata$n_met
-  elim <- TRUE # until no elim is an option
+  elim <- ifelse(is.infinite(fit$stanTKdata$elim_rate), TRUE, FALSE)
   growth <- (fit$stanTKdata$n_out == 2)
   
   whichexpeq <- exposure_names(object)
@@ -66,12 +66,13 @@ equations <- function(fit, object){
 
   }
   
-  if (nmet != 0) {
-    diffeq <- c(Eqacc, Eqdep, Eqmet)
-  } else {
-    diffeq <- c(Eqacc, Eqdep)
+  diffeq <- c(Eqacc)
+  if (elim){
+    diffeq <- c(diffeq, Eqdep)
   }
-  
+  if (nmet != 0) {
+    diffeq <- c(diffeq, Eqmet)
+  }
   if (growth) {
     diffeq <- c(diffeq, EqGrowth)
   }
