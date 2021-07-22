@@ -69,7 +69,11 @@ transformed parameters{
     ku[i] = 10 ^ log10ku[i] ;
   }
   for(i in 1:n_out){
-    ke[i] = 10 ^ log10ke[i] ;
+    if(!is_inf(elim_rate)){
+       ke[i] = 0 ;
+    } else{
+      ke[i] = 10 ^ log10ke[i] ;
+    }
   }
   for(i in 1:n_met){
     km[i] = 10 ^ log10km[i] ;

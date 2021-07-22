@@ -1,13 +1,14 @@
-#' Prediction function
+#' Prediction function using \code{fitTK} object
 #' 
 #' @param fit An object of \code{stanfit}
 #' @param data A data set with one column \code{time} and 1 to 4 exposure 
 #' @param mcmc_size
+#' @param fixed_init If \code{TRUE} fix the initial conditions of internal concentration.
 #' columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}
 #' 
 #' @export
 #' 
-predict.fitTK <- function(fit, data, mcmc_size = NULL){
+predict.fitTK <- function(fit, data, mcmc_size = NULL, fixed_init = TRUE){
   
   fitDATA <- fit[["stanTKdata"]]
   fitMCMC <- rstan::extract(fit[["stanfit"]])
@@ -64,6 +65,7 @@ predict.fitTK <- function(fit, data, mcmc_size = NULL){
     }
   }
   # ACCUMULATION PHASE (0 =< t =< tacc)
+  # C0 <- fitMCMC$CGobs_out[,,1][,1]
   C0 <- fitDATA$C0
    
   CGobs_out <- rep(NA, len_MCMC*lentp*n_out)
@@ -78,15 +80,26 @@ predict.fitTK <- function(fit, data, mcmc_size = NULL){
   
   km <- fitMCMC$km
   kem <- fitMCMC$kem
+  
   for(t in 1:rankacc){
     # Parent compound
-    CGobs_out[,t,1] = (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[,t]
+    CGobs_out[,t,1] = .var_init(
+      len_MCMC,
+      (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[,t],
+      fitMCMC$sigmaCGpred[,1],
+      fixed_init
+    )
     # Metabolites
     if(n_met > 0){
       for(m in 1:n_met){
-        Cmet_out[,t,m] = km[,m] * (
-          (C0-R[t])/ D[,m] * (exp(-(E + M)*time[t])-exp(-kem[,m] * time[t])) +
-          R[,t] / kem[,m] * (1 - exp(-(kem[,m] * time[t])))
+        Cmet_out[,t,m] = .var_init(
+          len_MCMC,
+          km[,m] * (
+            (C0-R[,t])/ D[,m] * (exp(-(E + M)*time[t])-exp(-kem[,m] * time[t])) +
+            R[,t] / kem[,m] * (1 - exp(-(kem[,m] * time[t])))
+          ),
+          fitMCMC$sigmaCmetpred[,m],
+          fixed_init
         )
       }
     }
@@ -94,14 +107,24 @@ predict.fitTK <- function(fit, data, mcmc_size = NULL){
   # DEPURATION PHASE (t > tacc)
   for(t in (rankacc+1):lentp){
     # Parent compound
-    CGobs_out[,t,1] = (C0 - R[,t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]) ;
+    CGobs_out[,t,1] = .var_init(
+      len_MCMC,
+      (C0 - R[,t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]),
+      fitMCMC$sigmaCGpred[,1],
+      fixed_init
+    )
     # Metabolites
     if(n_met > 0){
       for(m in 1:n_met){
-        Cmet_out[,t,m] = km[m] * (
-          (C0-R[t]) / D[m] * (exp(-(E + M) * time[t]) - exp(-kem[m] * time[t])) + 
-          R[,t] / kem[m] * (exp(-kem[m] * (time[t]-tacc)) - exp(-kem[m] * time[t])) +
-          R[,t] / D[m] * (exp(-(E+M)*(time[t]-tacc)) - exp(-kem[m] * (time[t] - tacc)))
+        Cmet_out[,t,m] =  .var_init(
+          len_MCMC,
+          km[,m] * (
+            (C0-R[,t]) / D[m] * (exp(-(E + M) * time[t]) - exp(-kem[,m] * time[t])) + 
+            R[,t] / kem[,m] * (exp(-kem[,m] * (time[t]-tacc)) - exp(-kem[,m] * time[t])) +
+            R[,t] / D[m] * (exp(-(E+M)*(time[t]-tacc)) - exp(-kem[,m] * (time[t] - tacc)))
+          ),
+          fitMCMC$sigmaCmetpred[,m],
+          fixed_init
         )
       }
     }
@@ -112,7 +135,12 @@ predict.fitTK <- function(fit, data, mcmc_size = NULL){
     gmax <- fitMCMC$gmax
     keg <- fitMCMC$ke[,2]
     for(t in 1:lentp){
-      CGobs_out[,t,2] = (G0 - gmax) * exp(-keg * time[t]) + gmax
+      CGobs_out[,t,2] = .var_init(
+        len_MCMC,
+        (G0 - gmax) * exp(-keg * time[t]) + gmax,
+        fitMCMC$sigmaCGpred[,2],
+        fixed_init
+      )
     }
   }
   
@@ -125,4 +153,14 @@ predict.fitTK <- function(fit, data, mcmc_size = NULL){
   class(predict_out) <- append("predictTK", class(predict_out))
   
   return(predict_out)
+}
+
+
+
+.var_init <- function(n,x,sd,fixed_init){
+  if(fixed_init == TRUE){
+    return(rnorm(n,x,sd))
+  } else{
+    return(x)
+  }
 }
