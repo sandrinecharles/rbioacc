@@ -1,8 +1,10 @@
 #' Prediction function using \code{fitTK} object
 #' 
+#' @rdname predict
+#' 
 #' @param fit An object of \code{stanfit}
 #' @param data A data set with one column \code{time} and 1 to 4 exposure 
-#' @param mcmc_size
+#' @param mcmc_size Size of mcmc chain if needed to be reduced
 #' @param fixed_init If \code{TRUE} fix the initial conditions of internal concentration.
 #' columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}
 #' 
@@ -154,7 +156,6 @@ predict.fitTK <- function(fit, data, mcmc_size = NULL, fixed_init = TRUE){
   
   return(predict_out)
 }
-
 
 
 .var_init <- function(n,x,sd,fixed_init){

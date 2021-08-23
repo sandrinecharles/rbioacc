@@ -34,7 +34,7 @@
 #' @param y A vector
 #' 
 .index_col_exposure <- function(data_frame){
-  col_exp = base::match(c("expw", "exps", "expf", "exppw"), base::colnames(data_frame))
+  col_exp <- base::match(c("expw", "exps", "expf", "exppw"), base::colnames(data_frame))
   return(col_exp[!base::is.na(col_exp)])
 }
 
