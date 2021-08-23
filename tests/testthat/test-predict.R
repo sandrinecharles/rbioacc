@@ -15,7 +15,7 @@ test_that("predict", {
   modelData_CC <- modelData(Chiro_Creuzot, time_accumulation = 1.0)
   fit_CC <- fitTK(modelData_CC, iter = 1000, chains=2)
   
-  # SAME data for test
+  # SAME DATA for test
   # Data 4 prediction should respect the exposure routes
   data_4pred_MGS <- data.frame( time = 0:25, expw = 7.08e-05)
   predict_MGS <- predict(fit_MGS, data_4pred_MGS, fixed_init = TRUE)

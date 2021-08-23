@@ -16,6 +16,11 @@
 #' 
 predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax = NA){
 
+  # R DOES NOT LIKE matrix with a single row !!!
+  if(nrow(mcmc) == 1){
+    mcmc = rbind(mcmc,mcmc)
+  }
+  
   col_names_MCMC <- base::colnames(mcmc)
   len_MCMC <- nrow(mcmc)
   

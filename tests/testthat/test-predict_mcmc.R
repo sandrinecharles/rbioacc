@@ -21,6 +21,9 @@ test_that("predict", {
   predict_MGS_mcmc <- predict_mcmc(mcmc_MGS, data_4pred_MGS, C0 = 0.023, time_accumulation = 4)
   plot(predict_MGS_mcmc)
   
+  predict_MGS_mcmc_1 <- predict_mcmc(mcmc_MGS[1,], data_4pred_MGS, C0 = 0.023, time_accumulation = 4)
+  plot(predict_MGS_mcmc_1)
+  
   ### TEST 2
   data("Male_Gammarus_seanine_growth")
   modelData_MGSG <- modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417)
@@ -54,6 +57,11 @@ test_that("predict", {
   )
   plot(predict_MGSG_mcmc)
   
+  predict_MGSG_mcmc_1 <- predict_mcmc(
+    mcmc_MGSG[1,], data_4pred_MGSG, C0 = 0, time_accumulation = 1.417, G0 = 2e-1, gmax=4.5e-1
+  )
+  plot(predict_MGSG_mcmc_1)
+  
   
   ### TEST 3
   data("Chiro_Creuzot")
@@ -83,5 +91,8 @@ test_that("predict", {
   )
   predict_CC_mcmc <- predict_mcmc(mcmc_CC, data_4pred_CC, C0 = 371.9, time_accumulation = 1.0)
   plot(predict_CC_mcmc)
+  
+  predict_CC_mcmc_1 <- predict_mcmc(mcmc_CC[1,], data_4pred_CC, C0 = 371.9, time_accumulation = 1.0)
+  plot(predict_CC_mcmc_1)
   
 })
