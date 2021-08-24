@@ -13,15 +13,20 @@ test_that("predict", {
   
   parfit_MGS <- rstan::extract(fit_MGS[["stanfit"]])
   # SEE quantile_table(fit_MGS)
-  mcmc_MGS = data.frame(
+  manual_MGS = data.frame(
     kee = parfit_MGS$ke[,1],
     kuw = parfit_MGS$ku[,1],
-    sigmaC = parfit_MGS$sigmaCGpred[,1]
+    sigmaConc = parfit_MGS$sigmaCGpred[,1]
   )
-  predict_MGS_mcmc <- predict_mcmc(mcmc_MGS, data_4pred_MGS, C0 = 0.023, time_accumulation = 4)
-  plot(predict_MGS_mcmc)
+  predict_MGS_m <- predict_manual(manual_MGS, data_4pred_MGS, C0 = 0.023, time_accumulation = 4)
+  plot(predict_MGS_m)
+
+  mcmc_MGS_m1 = data.frame(
+    kee = 0.4,
+    kuw = 592.024
+  )
   
-  predict_MGS_mcmc_1 <- predict_mcmc(mcmc_MGS[1,], data_4pred_MGS, C0 = 0.023, time_accumulation = 4)
+  predict_MGS_mcmc_1 <- predict_manual(mcmc_MGS_m1, data_4pred_MGS, C0 = 0.023, time_accumulation = 4)
   plot(predict_MGS_mcmc_1)
   
   ### TEST 2
@@ -36,32 +41,31 @@ test_that("predict", {
   
   parfit_MGSG <- rstan::extract(fit_MGSG[["stanfit"]])
   # quantile_table(fit_MGSG)
-  mcmc_MGSG = data.frame(
+  manual_MGSG = data.frame(
     kee = parfit_MGSG$ke[,1],
     keg = parfit_MGSG$ke[,2],
     kuw = parfit_MGSG$ku[,1],
-    sigmaC = parfit_MGSG$sigmaCGpred[,1],
-    sigmaG = parfit_MGSG$sigmaCGpred[,2],
+    sigmaConc = parfit_MGSG$sigmaCGpred[,1],
+    sigmaGrowth = parfit_MGSG$sigmaCGpred[,2],
     km1 = parfit_MGSG$km[,1],
     km2 = parfit_MGSG$km[,2],
     km3 = parfit_MGSG$km[,3],
     kem1 = parfit_MGSG$kem[,1],
     kem2 = parfit_MGSG$kem[,2],
     kem3 = parfit_MGSG$kem[,3],
-    sigmaM1 = parfit_MGSG$sigmaCmetpred[,1],
-    sigmaM2 = parfit_MGSG$sigmaCmetpred[,2],
-    sigmaM2 = parfit_MGSG$sigmaCmetpred[,3]
+    sigmaCmet1 = parfit_MGSG$sigmaCmetpred[,1],
+    sigmaCmet2 = parfit_MGSG$sigmaCmetpred[,2],
+    sigmaCmet2 = parfit_MGSG$sigmaCmetpred[,3]
   )
-  predict_MGSG_mcmc <- predict_mcmc(
-    mcmc_MGSG, data_4pred_MGSG, C0 = 0, time_accumulation = 1.417, G0 = 2e-1, gmax=4.5e-1
+  predict_MGSG_m <- predict_manual(
+    manual_MGSG, data_4pred_MGSG, C0 = 0, time_accumulation = 1.417, G0 = 2e-1, gmax=4.5e-1
   )
-  plot(predict_MGSG_mcmc)
+  plot(predict_MGSG_m)
   
-  predict_MGSG_mcmc_1 <- predict_mcmc(
-    mcmc_MGSG[1,], data_4pred_MGSG, C0 = 0, time_accumulation = 1.417, G0 = 2e-1, gmax=4.5e-1
+  predict_MGSG_m1 <- predict_manual(
+    manual_MGSG[1,], data_4pred_MGSG, C0 = 0, time_accumulation = 1.417, G0 = 2e-1, gmax=4.5e-1
   )
-  plot(predict_MGSG_mcmc_1)
-  
+  plot(predict_MGSG_m1)
   
   ### TEST 3
   data("Chiro_Creuzot")
@@ -76,23 +80,23 @@ test_that("predict", {
   
   parfit_CC <- rstan::extract(fit_CC[["stanfit"]])
   # quantile_table(fit_CC)
-  mcmc_CC = data.frame(
+  manual_CC = data.frame(
     kee = parfit_CC$ke[,1],
     kuw = parfit_CC$ku[,1],
     kus = parfit_CC$ku[,2],
     kupw = parfit_CC$ku[,3],
-    sigmaC = parfit_CC$sigmaCGpred[,1],
+    sigmaConc = parfit_CC$sigmaCGpred[,1],
     km1 = parfit_CC$km[,1],
     km2 = parfit_CC$km[,2],
     kem1 = parfit_CC$kem[,1],
     kem2 = parfit_CC$kem[,2],
-    sigmaM1 = parfit_CC$sigmaCmetpred[,1],
-    sigmaM2 = parfit_CC$sigmaCmetpred[,2]
+    sigmaCmet1 = parfit_CC$sigmaCmetpred[,1],
+    sigmaCmet2 = parfit_CC$sigmaCmetpred[,2]
   )
-  predict_CC_mcmc <- predict_mcmc(mcmc_CC, data_4pred_CC, C0 = 371.9, time_accumulation = 1.0)
-  plot(predict_CC_mcmc)
+  predict_CC_m <- predict_manual(manual_CC, data_4pred_CC, C0 = 371.9, time_accumulation = 1.0)
+  plot(predict_CC_m)
   
-  predict_CC_mcmc_1 <- predict_mcmc(mcmc_CC[1,], data_4pred_CC, C0 = 371.9, time_accumulation = 1.0)
-  plot(predict_CC_mcmc_1)
+  predict_CC_m1 <- predict_manual(manual_CC[1,], data_4pred_CC, C0 = 371.9, time_accumulation = 1.0)
+  plot(predict_CC_m1)
   
 })

@@ -5,7 +5,7 @@ test_that("test complex is running", {
   object = Male_Gammarus_Single
   time_accumulation = 4
   modelData_MGS = modelData(Male_Gammarus_Single, time_accumulation = 4)
-  fit <- fitTK(modelData_MGS, iter = 10000)
+  fit <- fitTK(modelData_MGS, iter = 100)
   print(fit)
   
   library(rstan)

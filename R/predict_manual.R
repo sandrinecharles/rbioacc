@@ -1,10 +1,12 @@
 #' Prediction function using \code{fitTK} object
 #' 
+#' Use when parameter are manually given by the user.
+#' 
 #' @rdname predict
 #' 
-#' @param mcmc A dataframe with name of parameters \code{kee}, \code{keg}, \code{ku1}, 
+#' @param param A dataframe with name of parameters \code{kee}, \code{keg}, \code{ku1}, 
 #' \code{ku2}, ...,  \code{km1}, \code{km2}, ... and \code{kem1}, \code{kem2}, ...,
-#' \code{sigmaC}, \code{sigmaM} (if metabolites) and \code{sigmaG} (if growth).
+#' \code{sigmaConc}, \code{sigmaCmet} (if metabolites) and \code{sigmaGrowth} (if growth).
 #' @param data A data set with one column \code{time} and 1 to 4 exposure 
 #' @param time_accumulation the time of accumulation.
 #' @param C0 Gives the initial conditions of internal concentration.
@@ -14,11 +16,13 @@
 #' 
 #' @export
 #' 
-predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax = NA){
+predict_manual <- function(param, data, time_accumulation = NULL, C0=0.0, G0=NA, gmax = NA){
 
   # R DOES NOT LIKE matrix with a single row !!!
-  if(nrow(mcmc) == 1){
-    mcmc = rbind(mcmc,mcmc)
+  if(nrow(param) == 1){
+    mcmc <- rbind(param,param)
+  } else{
+    mcmc <- param
   }
   
   col_names_MCMC <- base::colnames(mcmc)
@@ -32,16 +36,16 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
   
   km_index <- .index_col(col_names_MCMC, "km")
   kem_index <- .index_col(col_names_MCMC, "kem")
-  sigmaM_index <- .index_col(col_names_MCMC, "sigmaM")
+  sigmaCmet_index <- .index_col(col_names_MCMC, "sigmaCmet")
   n_met <- length(km_index)
   if(n_met > 0){
     km <- mcmc[, km_index]
     kem <- mcmc[, kem_index]
-    sigmaM <- mcmc[, sigmaM_index]
+    sigmaCmet <- mcmc[, sigmaCmet_index]
     if(n_met == 1){
       dim(km) <- c(len_MCMC, 1)
       dim(kem) <- c(len_MCMC, 1)
-      dim(sigmaM) <- c(len_MCMC, 1)
+      dim(sigmaCmet) <- c(len_MCMC, 1)
     }
   }
   
@@ -52,6 +56,7 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
   n_exp <- ncol(Cexp)
   n_out <- ifelse('keg' %in% colnames(mcmc), 2, 1)
 
+ 
   tacc <- time_accumulation
   lentp <- nrow(data)
   time <- data$time
@@ -71,6 +76,18 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
     E = mcmc$kee
   }else{
     E = mcmc$kee + mcmc$keg
+  }
+  
+  sigmaConc <- mcmc$sigmaConc
+  if(n_out == 2){
+    sigmaGrowth <- mcmc$sigmaGrowth
+  }
+  
+  # SET NO VARIANCE IF MCMC=1
+  if(nrow(param) == 1){
+    sigmaConc = 0
+    sigmaGrowth = 0
+    sigmaCmet = matrix(0,ncol=n_met,nrow=1)
   }
 
   U = matrix(NA, ncol = lentp, nrow = len_MCMC)
@@ -103,7 +120,7 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
     CGobs_out[,t,1] = rnorm(
       len_MCMC,
       (C0 - R[,t]) * exp(-(E + M) * time[t]) + R[,t],
-      mcmc$sigmaC
+      sigmaConc
     )
     # Metabolites
     if(n_met > 0){
@@ -114,25 +131,18 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
             (C0-R[,t])/ D[,m] * (exp(-(E + M)*time[t])-exp(-kem[,m] * time[t])) +
               R[,t] / kem[,m] * (1 - exp(-(kem[,m] * time[t])))
           ),
-          sigmaM[,m]
+          sigmaCmet[,m]
         )
       }
     }
   }
   # DEPURATION PHASE (t > tacc)
-  
-  for(t in (rankacc+1):lentp){
-    print((C0 - R[,t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]))
-  }
-  
-  (C0 - R[,t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t])
-  
   for(t in (rankacc+1):lentp){
     # Parent compound
     CGobs_out[,t,1] = rnorm(
       len_MCMC,
       (C0 - R[,t] * (1 - exp((E + M)*tacc))) * exp(-(E + M) * time[t]),
-      mcmc$sigmaC
+      sigmaConc
     )
     # Metabolites
     if(n_met > 0){
@@ -144,7 +154,7 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
               R[,t] / kem[,m] * (exp(-kem[,m] * (time[t]-tacc)) - exp(-kem[,m] * time[t])) +
               R[,t] / D[m] * (exp(-(E+M)*(time[t]-tacc)) - exp(-kem[,m] * (time[t] - tacc)))
           ),
-          sigmaM[,m]
+          sigmaCmet[,m]
         )
       }
     }
@@ -155,7 +165,7 @@ predict_mcmc <- function(mcmc, data, time_accumulation = NULL, C0, G0=NA, gmax =
       CGobs_out[,t,2] = rnorm(
         len_MCMC,
         (G0 - gmax) * exp(-mcmc$keg * time[t]) + gmax,
-        mcmc$sigmaG
+        sigmaGrowth
       )
     }
   }
