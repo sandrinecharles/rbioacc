@@ -1,6 +1,7 @@
 #' Correlations between parameters: colored matrix 
 #' 
 #' @param fit An object of class \code{fitTK}
+#' 
 #' @return A heatmap of class \code{ggplot}.
 #' 
 #' @export
@@ -23,7 +24,7 @@ corrMatrix <- function(fit){
 #' @param plots A string selecting the parameters. Defaults is \code{"all"} and select all parameters.
 #' Deterministc parameters can be selected by setting \code{"deterministic"} and 
 #' stochastic parameter with \code{"stochastic"}
-
+#' 
 #' @return A pairsplot of class \code{ggmatrix} containing planes of parameter pairs (lower triangle), marginal posterior distribution of each parameter (diagonal) and Pearson correlation coefficients (upper triangle)
 #' 
 #' @export

@@ -30,8 +30,7 @@
 
 #' Return column matching "expw", "exps", "expf", "exppw" of a \code{data.frame}
 #' 
-#' @param x A vector
-#' @param y A vector
+#' @param data_frame a dataframe
 #' 
 .index_col_exposure <- function(data_frame){
   col_exp <- base::match(c("expw", "exps", "expf", "exppw"), base::colnames(data_frame))
@@ -40,8 +39,7 @@
 
 #' Return column matching "concX" of a \code{data.frame} where X is metabolite
 #' 
-#' @param x A vector
-#' @param y A vector
+#' @param data_frame a dataframe
 #' 
 .index_col_metabolite <- function(data_frame){
   obj_colname <- base::colnames(data_frame)

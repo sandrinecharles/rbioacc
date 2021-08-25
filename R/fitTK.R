@@ -15,12 +15,6 @@ fitTK <- function(stanTKdata, ...){
 }
 
 
-#' @export
-#' 
-fitTKvar <- function(stanTKdata, ...){
-   UseMethod("fitTKvar")
-}
-
 #' Bayesian inference of TK model with Stan
 #' 
 #' @rdname fitTK
@@ -44,7 +38,7 @@ fitTK.stanTKdataCST <- function(stanTKdata, ...) {
 #' 
 #' @export
 #'
- fitTKvar.stanTKdataVAR <- function(stanTKdata, ...) {
+ fitTK.stanTKdataVAR <- function(stanTKdata, ...) {
    stanfit <- rstan::sampling(stanmodels$odeTK, data = stanTKdata, ...)
    out <- list(stanTKdata = stanTKdata, stanfit = stanfit)
    class(out) <- append("fitTK", class(out))

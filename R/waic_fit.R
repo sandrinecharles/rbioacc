@@ -6,7 +6,7 @@
 #' @return A numeric containing the WAIC
 #' 
 #' @export
-
+#' 
 waic <- function(fit){
   fitMCMC = as.matrix(rstan::extract(fit[["stanfit"]], permuted = FALSE))
   waicEval <- loo::waic(fitMCMC)
