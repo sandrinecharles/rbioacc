@@ -1,7 +1,7 @@
 #' Posterior predictive check
 #'
 #' @param stanTKdata List of Data require for computing
-#' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
+#' @param \dots Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #' 
 #' @return An object of class `fitTK` containing two object: \code{stanTKdata}
 #' the data set used for inference and \code{stanfit}  returned by `rstan::sampling`
@@ -10,10 +10,16 @@
 #' 
 #' @export
 #' 
-fitTK <- function(fit, ...){
+fitTK <- function(stanTKdata, ...){
    UseMethod("fitTK")
 }
 
+
+#' @export
+#' 
+fitTKvar <- function(stanTKdata, ...){
+   UseMethod("fitTKvar")
+}
 
 #' Bayesian inference of TK model with Stan
 #' 
@@ -25,7 +31,6 @@ fitTK.stanTKdataCST <- function(stanTKdata, ...) {
    # remove additional variables
    dataFit <- stanTKdata
    dataFit$origin_data <- NULL
-   
    stanfit <- rstan::sampling(stanmodels$TK, data = dataFit, ...)
    out <- list(stanTKdata = stanTKdata, stanfit = stanfit)
    class(out) <- append("fitTK", class(out))
@@ -39,7 +44,7 @@ fitTK.stanTKdataCST <- function(stanTKdata, ...) {
 #' 
 #' @export
 #'
- fitTK2.stanTKdataVAR <- function(stanTKdata, ...) {
+ fitTKvar.stanTKdataVAR <- function(stanTKdata, ...) {
    stanfit <- rstan::sampling(stanmodels$odeTK, data = stanTKdata, ...)
    out <- list(stanTKdata = stanTKdata, stanfit = stanfit)
    class(out) <- append("fitTK", class(out))
