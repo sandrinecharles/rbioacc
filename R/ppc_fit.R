@@ -10,11 +10,12 @@ df_ppc <- function(fit, ...){
 #' 
 #' @rdname ppc
 #' 
-#' @param fit And object returned by fitTK
+#' @param fit An object returned by fitTK
+#' @param \dots additional arguments
 #' 
 #' @export
 #' 
-df_ppc.fitTK <- function(fit){
+df_ppc.fitTK <- function(fit, ...){
   df <- .df_for_plot(fit)
   df$col_range <- ifelse(df$qinf95 > df$observation | df$qsup95 < df$observation, "out", "in")
   return(df)
@@ -55,10 +56,11 @@ ppc <- function(fit, ...){
 #' @rdname ppc
 #' 
 #' @param fit And object returned by fitTK
+#' @param \dots Additional arguments
 #' 
 #' @export
 #' 
-ppc.fitTK <- function(fit){
+ppc.fitTK <- function(fit, ...){
 
   df <- df_ppc(fit)
   

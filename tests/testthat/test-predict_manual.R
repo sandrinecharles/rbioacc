@@ -1,5 +1,7 @@
 test_that("predict", {
   
+  skip_on_cran()
+  
   # TEST 1
   data("Male_Gammarus_Single")
   Male_Gammarus_Single <- Male_Gammarus_Single[Male_Gammarus_Single$replicate == 1, ]

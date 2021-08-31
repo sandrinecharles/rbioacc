@@ -1,19 +1,21 @@
 test_that("predict", {
   
+  skip_on_cran()
+  
   # small test to run fast
   data("Male_Gammarus_Single")
   Male_Gammarus_Single <- Male_Gammarus_Single[Male_Gammarus_Single$replicate == 1, ]
   modelData_MGS <- modelData(Male_Gammarus_Single, time_accumulation = 4)
-  fit_MGS <- fitTK(modelData_MGS, iter = 1000, chains = 2)
+  fit_MGS <- fitTK(modelData_MGS, iter = 10, chains = 2)
   
   data("Male_Gammarus_seanine_growth")
   modelData_MGSG <- modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417)
-  fit_MGSG <- fitTK(modelData_MGSG, iter = 1000, chains=2)
+  fit_MGSG <- fitTK(modelData_MGSG, iter = 10, chains=2)
 
   data("Chiro_Creuzot")
   Chiro_Creuzot <- Chiro_Creuzot[Chiro_Creuzot$replicate == 1,]
   modelData_CC <- modelData(Chiro_Creuzot, time_accumulation = 1.0)
-  fit_CC <- fitTK(modelData_CC, iter = 1000, chains=2)
+  fit_CC <- fitTK(modelData_CC, iter = 10, chains=2)
   
   # SAME DATA for test
   # Data 4 prediction should respect the exposure routes
@@ -37,9 +39,9 @@ test_that("predict", {
   plot(fit_CC)
   plot(predict_CC)
   
-  test_true(all(class(plot(predict_MGS)) == c("gg","ggplot")))
-  test_true(all(class(plot(predict_MGSG)) == c("gg", "ggplot")))
-  test_true(all(class(plot(predict_CC)) == c("gg", "ggplot")))
+  expect_true(all(class(plot(predict_MGS)) == c("gg","ggplot")))
+  expect_true(all(class(plot(predict_MGSG)) == c("gg", "ggplot")))
+  expect_true(all(class(plot(predict_CC)) == c("gg", "ggplot")))
   
 })
 

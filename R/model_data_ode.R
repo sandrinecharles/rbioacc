@@ -1,20 +1,17 @@
 #' Create a list giving data and parameters to use in the model inference.
 #' 
-#' @param object An object of class \code{data.frame}
-#' @param time_accumulation A scalar givin accumulation time
-#' @param \dots Further arguments to be passed to generic methods
 #' 
 #' @export
 #' 
 #' @return A \code{list} with data and parameters require for model inference.
 #' 
 #' 
-modelData_ode <- function(object, ...){
+modelData_ode <- function(df_exposure, df_internal, ...){
   UseMethod("modelData_ode")
 }
 
 
-#' @rdname modelData
+#' @rdname modelData_ode
 #' 
 #' @param df_exposure Dataframe of exposure with 2 column (\code{time} and \code{value})
 #' @param df_internal Dataframe of internal concentration with 2 column (\code{time} and \code{value})
@@ -24,12 +21,13 @@ modelData_ode <- function(object, ...){
 #' @param time_accumulation Time of accumulation
 #' @param minK Hyperparameter value
 #' @param maxK Hyperparameter value
+#' @param \dots Additional arguments
 #' 
 #' @export
 #' 
 modelData_ode = function(
   df_exposure, df_internal, 
-  y0 = 1, t0 = -0.001, unifMax=10, time_accumulation = NULL, minK=-5, maxK=5){
+  y0 = 1, t0 = -0.001, unifMax=10, time_accumulation = NULL, minK=-5, maxK=5, ...){
   
   rtrn_ls <- list()
   

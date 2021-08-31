@@ -21,7 +21,6 @@ library(rbioacc)
 # library(ggplot2)
 ```
 
-
 ## A Simple Example: *Male Gammarus Single*
 
 ### Data

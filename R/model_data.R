@@ -20,7 +20,7 @@ modelData <- function(object, ...){
 #' 
 #' @export
 #' @importFrom stats na.omit
-modelData.data.frame <- function(object, time_accumulation, elimination_rate = NA){
+modelData.data.frame <- function(object, time_accumulation, elimination_rate = NA, ...){
   
   .check_modelData_object(object)
   

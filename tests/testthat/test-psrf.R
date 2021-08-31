@@ -20,5 +20,5 @@ test_that("psrf",{
   
   # Check number of parameter estimates
   expect_equal(length(psrf(fit_MGS)[,1]),3)
-  expect_equal(length(psrf(fit_MGSG)[,1]),14)
+  expect_equal(length(psrf(fit_MGSG)[,1]),16)
 })

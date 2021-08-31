@@ -4,13 +4,16 @@
 #' \code{fitTK}.  It plots the fit obtained for each
 #' variable in the original dataset.
 #' 
-#' @param fit And object returned by fitTK
+#' @param x And object returned by fitTK
+#' @param \dots Additional arguments
 #' 
 #' @export
 #' 
 #' @import ggplot2
 #' 
-plot.fitTK <- function(fit){
+plot.fitTK <- function(x, ...){
+  
+  fit <- x
 
   df <- .df_for_plot(fit)
   

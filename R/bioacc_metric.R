@@ -19,7 +19,7 @@ bioacc_metric <- function(fit, ...){
 #' 
 #' @export
 #' 
-bioacc_metric.fitTK <- function(fit, type = "k", route = "all"){
+bioacc_metric.fitTK <- function(fit, type = "k", route = "all", ...){
   
   fitMCMC <- rstan::extract(fit[["stanfit"]])
   
@@ -57,10 +57,14 @@ bioacc_metric.fitTK <- function(fit, type = "k", route = "all"){
 }
 
 #' Plot function for object of class \code{bioaccMetric}
+#' 
+#' @param x a data frame
+#' @param \dots Additional arguments
 #'  
 #' @export
 #' 
-plot.bioaccMetric <- function(df){
+plot.bioaccMetric <- function(x, ...){
+  df <- x
 
   df_plt <- .fonte(df, "exposure","value")
   
@@ -80,6 +84,8 @@ plot.bioaccMetric <- function(df){
 }
 
 #' Retrieve exposure routes names from object
+#' 
+#' @param object a data frame.
 #'  
 #' @export
 #' 

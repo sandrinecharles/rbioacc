@@ -1,3 +1,9 @@
+#' Data frame of Posterior over Prior 
+#' 
+#' @rdname df_PP
+#' 
+#' @param \dots Additional arguments
+#' 
 #' @export
 #' 
 df_PriorPost <- function(fit, ...){
@@ -6,17 +12,19 @@ df_PriorPost <- function(fit, ...){
 
 #' Data frame of Posterior over Prior 
 #' 
+#' @rdname df_PP
+#' 
 #' @param fit An object of class \code{fitTK} returned by the function \code{fitTK()}.
-#' @param select A string selecting the parameters. Defaults is \code{"all"} and select all parameters..
-#' Deterministc parameters can be selected by setting \code{"deterministic"} and 
-#' stochastic parameter with \code{"stochastic"}
+#' @param select A string selecting the parameters. Defaults is \code{"all"} and
+#' select all parameters.Deterministc parameters can be selected by setting
+#' \code{"deterministic"} and stochastic parameter with \code{"stochastic"}
 #' 
 #' @return An object of class \code{data.frame}
 #' 
 #' @export
 #' @importFrom stats runif
 #' 
-df_PriorPost.fitTK <- function(fit, select = "all"){
+df_PriorPost.fitTK <- function(fit, select = "all", ...){
   fitMCMC <- rstan::extract(fit[["stanfit"]])
   elim_rate <- fit[["stanTKdata"]]$elim_rate
   lengthMCMC <- nrow(fitMCMC$ku)
@@ -72,6 +80,12 @@ df_PriorPost.fitTK <- function(fit, select = "all"){
   return(df)
 }
 
+#' Plot Posterior over Prior 
+#' 
+#' @rdname plot_PP
+#' 
+#' @param \dots Additional arguments
+#' 
 #' @export
 #' 
 plot_PriorPost <- function(fit, ...){
@@ -80,19 +94,22 @@ plot_PriorPost <- function(fit, ...){
 
 
 #' Plot Posterior over Prior 
+#' 
+#' @rdname plot_PP
 #'
 #' 
 #' @param fit An object of class \code{fitTK} returned by the function \code{fitTK()}.
 #' @param select A string selecting the parameters. Defaults is \code{"all"} and select all parameters.
 #' Deterministic parameters can be selected by setting \code{"deterministic"} and 
 #' stochastic parameter with \code{"stochastic"}.
+#' @param \dots addition arguments
 #' 
 #' @return An object of class \code{data.frame}.
 #' 
 #' @export
 #' 
 #' 
-plot_PriorPost.fitTK <- function(fit, select = "all"){
+plot_PriorPost.fitTK <- function(fit, select = "all", ...){
   
   df <- df_PriorPost(fit, select)
   

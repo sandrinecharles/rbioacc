@@ -64,7 +64,7 @@ NULL
 #' 
 NULL
 
-#' Male \¼code{Gammarus pulex} exposed to seanine spiked water. A single exposure
+#' Male \code{Gammarus pulex} exposed to seanine spiked water. A single exposure
 #' concentration was tested. The duration of the accumulation phase is 1.417
 #' days. Three metabolites were quantified. The growth of organism was included.
 #'
@@ -90,7 +90,7 @@ NULL
 #' concentration in organism.}
 #' \item{\code{concm3}}{A vector of class \code{numeric} with metabolite 
 #' concentration in organism.}
-#' \item{\code{growth}}{A vector of class \code{numeric} with grwth of the
+#' \item{\code{growth}}{A vector of class \code{numeric} with growth of the
 #' organism.}
 #' }
 #' 
@@ -129,6 +129,66 @@ NULL
 #' concentration in organism.}
 #' }
 #'
+#' @keywords dataset
+#' 
+NULL
+
+
+#' Data on Chironomus exposed to benzoapyrene
+#' 
+#' @name Chironomus_benzoapyrene
+#' 
+#' @docType data
+#' 
+#' @usage data(Chironomus_benzoapyrene)
+#' 
+#' @keywords dataset
+#' 
+NULL
+
+#' Data on Oncorhynchus exposition
+#' @name Oncorhynchus_two
+#' 
+#' @docType data
+#' 
+#' @usage data(Oncorhynchus_two)
+#' 
+#' @keywords dataset
+#' 
+NULL
+
+
+#' Data on Sialis lutaria exposure time series
+#' 
+#' @name Exposure_Sialis_lutaria
+#' 
+#' @docType data
+#' 
+#' @usage data(Exposure_Sialis_lutaria)
+#' 
+#' @keywords dataset
+#' 
+NULL
+
+#' Data on Sialis lutaria internal time series
+#' 
+#' @name Internal_Sialis_lutaria
+#' 
+#' @docType data
+#' 
+#' @usage data(Internal_Sialis_lutaria)
+#' 
+#' @keywords dataset
+#' 
+NULL
+
+#' Data on Gammarus exposed to azoxistrobine
+#' @name Gammarus_azoxistrobine_1d_Rosch2017
+#' 
+#' @docType data
+#' 
+#' @usage data(Gammarus_azoxistrobine_1d_Rosch2017)
+#' 
 #' @keywords dataset
 #' 
 NULL

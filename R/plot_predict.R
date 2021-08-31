@@ -3,11 +3,14 @@
 #' This is the generic \code{plot} S3 method for the
 #' \code{predictTK}.
 #' 
-#' @param predict An object of class \code{predictTK} returned by predict
+#' @param x An object of class \code{predictTK} returned by predict
+#' @param \dots Additional arguments
 #' 
 #' @export
 #' 
-plot.predictTK <- function(predict){
+plot.predictTK <- function(x, ...){
+  
+  predict <- x
   
   df <- .df_for_plot_predict(predict)
 

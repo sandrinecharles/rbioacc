@@ -1,17 +1,16 @@
 test_that("test complex is running", {
   
+  skip_on_cran()
+  
   data("Male_Gammarus_Single")
   
   object = Male_Gammarus_Single
   time_accumulation = 4
   modelData_MGS = modelData(Male_Gammarus_Single, time_accumulation = 4)
-  fit <- fitTK(modelData_MGS, iter = 100)
-  print(fit)
   
-  library(rstan)
-  fitMCMC = rstan::extract(fit)
-  quantile(fitMCMC$ku, probs = c(0.025, 0.5, 0.975))
-  quantile(fitMCMC$ke, probs = c(0.025, 0.5, 0.975))
-  quantile(fitMCMC$sigmaCpred, probs = c(0.025, 0.5, 0.975))
+  expect_error(modelData_MGS, NA)
   
+  fit <- fitTK(modelData_MGS, iter = 1000)
+  expect_error(fit, NA)
+
 })

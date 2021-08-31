@@ -9,7 +9,7 @@
 #' 
 #' @export
 #'
-mcmcTraces <- function(fit, plots = c("all", "deterministic", "stochastic")){
+mcmcTraces <- function(fit, plots = "all"){
   if (plots == "deterministic"){
     corr <- ggmcmc::ggs(fit[["stanfit"]], family = "^k|^g")
   } else if (plots == "stochastic") {

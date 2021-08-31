@@ -42,9 +42,9 @@ test_that("bioacc_metric", {
   expect_true(all(class(BFCss_MGSG) == c("bioaccMetric", "data.frame")))
   expect_true(all(class(BFCss_CC) == c("bioaccMetric", "data.frame")))
   # Check colnames
-  expect_true(all(colnames(BFCss_MGS) == c("w")))
-  expect_true(all(colnames(BFCss_MGSG) == c("w")))
-  expect_true(all(colnames(BFCss_CC) == c("w","s","pw")))
+  expect_true(all(colnames(BFCss_MGS) == c("BCFss")))
+  expect_true(all(colnames(BFCss_MGSG) == c("BCFss")))
+  expect_true(all(colnames(BFCss_CC) == c("BCFss","BSAFss","BCFpwss")))
   # Check class
   expect_true(all(class(plot(BFCss_MGS)) == c("gg", "ggplot")))
   expect_true(all(class(plot(BFCss_MGSG)) == c("gg", "ggplot")))

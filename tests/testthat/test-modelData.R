@@ -1,32 +1,28 @@
 test_that("modelData outputs", {
 
   data("Male_Gammarus_Single")
-  modelData(Male_Gammarus_Single, time_accumulation = 4)
+  expect_error(modelData(Male_Gammarus_Single, time_accumulation = 4), NA)
   
   data("Male_Gammarus_seanine_growth")
-  modelData(Male_Gammarus_seanine_growth, time_accumulation = )
+  expect_error(modelData(Male_Gammarus_seanine_growth, time_accumulation = 1.417), NA)
   
   data("Male_Gammarus_Merged")
-  modelData(Male_Gammarus_Merged, time_accumulation = 4)
+  df_1 = with(Male_Gammarus_Merged, Male_Gammarus_Merged[expw == 7.08021e-05,])
+  expect_error(modelData(df_1, time_accumulation = 4), NA)
   
   data("Oncorhynchus_two")
-  modelData(Oncorhynchus_two, time_accumulation = 49)
+  df_2 = with(Oncorhynchus_two, Oncorhynchus_two[replicate == 1,])
+  expect_error(modelData(df_2, time_accumulation = 49), NA)
   
   data("Chironomus_benzoapyrene")
-  modelData(Chironomus_benzoapyrene, time_accumulation = 3)
+  expect_error(modelData(Chironomus_benzoapyrene, time_accumulation = 3), NA)
   
+})
+
+test_that("TEST .check_modelData_object", {
+  data("Male_Gammarus_Single")
   test_object = Male_Gammarus_Single
-  
-  test_that("TEST .check_modelData_object", {
-    expect_null(rbioacc:::.check_modelData_object(test_object))
-  })
-  test_that("TEST .modelDataSingle", {
-    test_ls_object <- base::split(test_object, test_object$replicate)
-    test_sgl_object = test_ls_object[[1]]
-    test_ls_class = rbioacc:::.modelDataSingle(test_sgl_object, time_accumulation = 4)
-    expect_equal(class(test_ls_class), "list")
-  })
-  
+  expect_null(rbioacc:::.check_modelData_object(test_object))
 })
 
 

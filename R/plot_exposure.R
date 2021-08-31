@@ -1,5 +1,6 @@
 #' Plot exposure profile
 #' 
+#' @param object a data frame with exposure column
 #' 
 #' @export
 #' 
