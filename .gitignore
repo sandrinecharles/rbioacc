@@ -5,8 +5,8 @@
 rbioacc.Rproj
 
 Read-and-delete-me
-inst/doc
 src/*.o
+src/*.so
 documentation
 lab
 data-raw
