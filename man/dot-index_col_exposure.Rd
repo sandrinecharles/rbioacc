@@ -7,9 +7,7 @@
 .index_col_exposure(data_frame)
 }
 \arguments{
-\item{x}{A vector}
-
-\item{y}{A vector}
+\item{data_frame}{a dataframe}
 }
 \description{
 Return column matching "expw", "exps", "expf", "exppw" of a \code{data.frame}

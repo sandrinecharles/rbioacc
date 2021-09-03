@@ -4,7 +4,7 @@
 \alias{mcmcTraces}
 \title{Traces of MCMC iterations}
 \usage{
-mcmcTraces(fit, plots = c("all", "deterministic", "stochastic"))
+mcmcTraces(fit, plots = "all")
 }
 \arguments{
 \item{fit}{An object of class \code{fitTK}}

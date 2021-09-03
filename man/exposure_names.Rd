@@ -6,6 +6,9 @@
 \usage{
 exposure_names(object)
 }
+\arguments{
+\item{object}{a data frame.}
+}
 \description{
 Retrieve exposure routes names from object
 }

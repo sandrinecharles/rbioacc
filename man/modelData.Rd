@@ -7,7 +7,7 @@
 \usage{
 modelData(object, ...)
 
-\method{modelData}{data.frame}(object, time_accumulation, ...)
+\method{modelData}{data.frame}(object, time_accumulation, elimination_rate = NA, ...)
 }
 \arguments{
 \item{object}{An object of class \code{data.frame}}
@@ -15,6 +15,9 @@ modelData(object, ...)
 \item{\dots}{Further arguments to be passed to generic methods}
 
 \item{time_accumulation}{A scalar givin accumulation time}
+
+\item{elimination_rate}{A scalar for the elimination rate. Default is \code{NA}.
+To remove elimination rate, set \code{elimination_rate = 0}.}
 }
 \value{
 A \code{list} with data and parameters require for model inference.

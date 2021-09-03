@@ -6,6 +6,9 @@
 \usage{
 plot_exposure(object)
 }
+\arguments{
+\item{object}{a data frame with exposure column}
+}
 \description{
 Plot exposure profile
 }

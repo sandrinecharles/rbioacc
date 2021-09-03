@@ -4,10 +4,12 @@
 \alias{plot.predictTK}
 \title{Plotting method for \code{predictTK} objects}
 \usage{
-\method{plot}{predictTK}(predict)
+\method{plot}{predictTK}(x, ...)
 }
 \arguments{
-\item{predict}{An object of class \code{predictTK} returned by predict}
+\item{x}{An object of class \code{predictTK} returned by predict}
+
+\item{\dots}{Additional arguments}
 }
 \description{
 This is the generic \code{plot} S3 method for the

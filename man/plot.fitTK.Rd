@@ -4,10 +4,12 @@
 \alias{plot.fitTK}
 \title{Plotting method for \code{fitTK} objects}
 \usage{
-\method{plot}{fitTK}(fit)
+\method{plot}{fitTK}(x, ...)
 }
 \arguments{
-\item{fit}{And object returned by fitTK}
+\item{x}{And object returned by fitTK}
+
+\item{\dots}{Additional arguments}
 }
 \description{
 This is the generic \code{plot} S3 method for the

@@ -3,7 +3,7 @@
 \docType{data}
 \name{Male_Gammarus_seanine_growth}
 \alias{Male_Gammarus_seanine_growth}
-\title{Male \¼code{Gammarus pulex} exposed to seanine spiked water. A single exposure
+\title{Male \code{Gammarus pulex} exposed to seanine spiked water. A single exposure
 concentration was tested. The duration of the accumulation phase is 1.417
 days. Three metabolites were quantified. The growth of organism was included.}
 \format{
@@ -23,7 +23,7 @@ concentration in organism.}
 concentration in organism.}
 \item{\code{concm3}}{A vector of class \code{numeric} with metabolite
 concentration in organism.}
-\item{\code{growth}}{A vector of class \code{numeric} with grwth of the
+\item{\code{growth}}{A vector of class \code{numeric} with growth of the
 organism.}
 }
 }
@@ -31,7 +31,7 @@ organism.}
 data(Male_Gammarus_seanine_growth)
 }
 \description{
-Male \¼code{Gammarus pulex} exposed to seanine spiked water. A single exposure
+Male \code{Gammarus pulex} exposed to seanine spiked water. A single exposure
 concentration was tested. The duration of the accumulation phase is 1.417
 days. Three metabolites were quantified. The growth of organism was included.
 }

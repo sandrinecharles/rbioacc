@@ -3,19 +3,19 @@
 \name{fitTK}
 \alias{fitTK}
 \alias{fitTK.stanTKdataCST}
-\alias{fitTK2.stanTKdataVAR}
+\alias{fitTK.stanTKdataVAR}
 \title{Posterior predictive check}
 \usage{
-fitTK(fit, ...)
+fitTK(stanTKdata, ...)
 
 \method{fitTK}{stanTKdataCST}(stanTKdata, ...)
 
-fitTK2.stanTKdataVAR(stanTKdata, ...)
+\method{fitTK}{stanTKdataVAR}(stanTKdata, ...)
 }
 \arguments{
-\item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
-
 \item{stanTKdata}{List of Data require for computing}
+
+\item{\dots}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
 }
 \value{
 An object of class \code{fitTK} containing two object: \code{stanTKdata}

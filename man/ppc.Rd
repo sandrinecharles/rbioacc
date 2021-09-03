@@ -9,14 +9,16 @@
 \usage{
 df_ppc(fit, ...)
 
-\method{df_ppc}{fitTK}(fit)
+\method{df_ppc}{fitTK}(fit, ...)
 
 ppc(fit, ...)
 
-\method{ppc}{fitTK}(fit)
+\method{ppc}{fitTK}(fit, ...)
 }
 \arguments{
 \item{fit}{And object returned by fitTK}
+
+\item{\dots}{Additional arguments}
 }
 \description{
 This is the generic \code{ppc} S3 method for plots of the predicted

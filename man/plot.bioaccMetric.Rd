@@ -4,7 +4,12 @@
 \alias{plot.bioaccMetric}
 \title{Plot function for object of class \code{bioaccMetric}}
 \usage{
-\method{plot}{bioaccMetric}(df)
+\method{plot}{bioaccMetric}(x, ...)
+}
+\arguments{
+\item{x}{a data frame}
+
+\item{\dots}{Additional arguments}
 }
 \description{
 Plot function for object of class \code{bioaccMetric}

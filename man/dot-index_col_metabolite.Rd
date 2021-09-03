@@ -7,9 +7,7 @@
 .index_col_metabolite(data_frame)
 }
 \arguments{
-\item{x}{A vector}
-
-\item{y}{A vector}
+\item{data_frame}{a dataframe}
 }
 \description{
 Return column matching "concX" of a \code{data.frame} where X is metabolite
