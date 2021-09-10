@@ -1,6 +1,7 @@
 #' Return the time at 95% depuration of the parent component
 #'
 #' @param fit An object of class \code{fitTK}
+#' 
 #' @return a numeric object
 #'
 #' @export

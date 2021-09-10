@@ -5,6 +5,8 @@
 #' the data stored in the column names of \code{df}.
 #' @param values_to A string specifying the name of the column to create from
 #'  the data stored in cell values.
+#'  
+#' @return The data frame with a "lengthens" shape: more rows, less columns 
 #' 
 .fonte <- function(df, names_to, values_to){
   dfout <- data.frame(
@@ -21,6 +23,8 @@
 #' @param x A vector
 #' @param y A vector
 #' 
+#' @return A logical value
+#' 
 .is_equal_rmInf <- function(x,y){ 
   ux = unique(x) ; uy = unique(y)
   ux = ux[ux != Inf] ; uy = uy[uy != Inf]
@@ -32,6 +36,8 @@
 #' 
 #' @param data_frame a dataframe
 #' 
+#' @return A vector of numeric
+#' 
 .index_col_exposure <- function(data_frame){
   col_exp <- base::match(c("expw", "exps", "expf", "exppw"), base::colnames(data_frame))
   return(col_exp[!base::is.na(col_exp)])
@@ -40,6 +46,8 @@
 #' Return column matching "concX" of a \code{data.frame} where X is metabolite
 #' 
 #' @param data_frame a dataframe
+#' 
+#' @return A vector of numeric
 #' 
 .index_col_metabolite <- function(data_frame){
   obj_colname <- base::colnames(data_frame)
