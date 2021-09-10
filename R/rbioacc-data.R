@@ -22,10 +22,6 @@
 #' in organism in \eqn{\mu g.m L^{-1}}.}
 #' }
 #' 
-#' @references Ciccia, T. (2019). Accumulation et devenir du mercure chez
-#' l'espèce sentinelle Gammarus fossarum : de l'expérimentation au développement
-#' d'un modèle toxicocinétique multi-compartiments.
-#' Rapport de stage de Master 2, INRAE.
 #'
 #' @keywords dataset
 #' 
@@ -55,10 +51,6 @@ NULL
 #' in organism in \eqn{\mu g.m L^{-1}}.}
 #' }
 #' 
-#' @references Ciccia, T. (2019). Accumulation et devenir du mercure chez
-#' l'espèce sentinelle Gammarus fossarum : de l'expérimentation au développement
-#' d'un modèle toxicocinétique multi-compartiments.
-#' Rapport de stage de Master 2, INRAE.
 #'
 #' @keywords dataset
 #' 
@@ -93,10 +85,6 @@ NULL
 #' \item{\code{growth}}{A vector of class \code{numeric} with growth of the
 #' organism.}
 #' }
-#' 
-#' @references Ashauer, R. et al. (2012). Significance of xenobiotic metabolism 
-#' for bioaccumulation kinetics of organic chemicals in Gammarus pulex.
-#' Environmental Science Technologie, 46: 3498-3508.
 #'
 #' @keywords dataset
 #' 

@@ -7,6 +7,8 @@
 #' @param x And object returned by fitTK
 #' @param \dots Additional arguments
 #' 
+#' @return a plot of class \code{ggplot}
+#' 
 #' @export
 #' 
 #' @import ggplot2

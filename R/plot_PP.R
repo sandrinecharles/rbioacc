@@ -104,7 +104,7 @@ plot_PriorPost <- function(fit, ...){
 #' stochastic parameter with \code{"stochastic"}.
 #' @param \dots addition arguments
 #' 
-#' @return An object of class \code{data.frame}.
+#' @return A plot of class \code{ggplot}.
 #' 
 #' @export
 #' 

@@ -13,6 +13,8 @@ df_ppc <- function(fit, ...){
 #' @param fit An object returned by fitTK
 #' @param \dots additional arguments
 #' 
+#' @return A data frame with median and 95\% credible interval
+#' 
 #' @export
 #' 
 df_ppc.fitTK <- function(fit, ...){
@@ -57,6 +59,8 @@ ppc <- function(fit, ...){
 #' 
 #' @param fit And object returned by fitTK
 #' @param \dots Additional arguments
+#' 
+#' @return a plot of class \code{ggplot}
 #' 
 #' @export
 #' 

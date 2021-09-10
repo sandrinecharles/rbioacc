@@ -14,7 +14,10 @@
 #' @param gmax gmax (require if \code{keg} is provided)
 #' columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}
 #' 
+#' @return An object of class \code{predictTK}
+#' 
 #' @export
+#' 
 #' 
 predict_manual <- function(param, data, time_accumulation = NULL, C0=0.0, G0=NA, gmax = NA){
 

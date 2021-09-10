@@ -4,6 +4,8 @@
 #' @param probs Scalar or Vector of quantiles.
 #' Default is 0.025, 0.5 and 0.975 giving median and 95% credible interval
 #' 
+#' @return A data frame with quantiles
+#' 
 #' @export
 #'
 quantile_table <- function(fit, probs = c(0.025, 0.5, 0.975)){

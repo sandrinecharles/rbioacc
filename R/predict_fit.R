@@ -9,6 +9,8 @@
 #' columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}
 #' @param \dots Additional arguments
 #' 
+#' @return An object of class \code{predictTK}
+#' 
 #' @export
 #' 
 predict.fitTK <- function(object, data, mcmc_size = NULL, fixed_init = TRUE, ...){
@@ -160,7 +162,11 @@ predict.fitTK <- function(object, data, mcmc_size = NULL, fixed_init = TRUE, ...
   return(predict_out)
 }
 
+#' Additional variance for initial condition
+#' 
 #' @importFrom stats rnorm
+#' 
+#' @return a vector of numeric
 #' 
 .var_init <- function(n,x,sd,fixed_init){
   if(fixed_init == TRUE){
