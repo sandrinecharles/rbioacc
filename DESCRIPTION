@@ -1,6 +1,6 @@
 Package: rbioacc
 Title: Inference and Prediction of ToxicoKinetic (TK) Models
-Version: 1.0.0
+Version: 0.0.5
 Authors@R: c(
     person("Virgile", "Baudrot", role = "aut", email = "virgile.baudrot@posteo.net"),
     person("Sandrine", "Charles", role = "aut"),
@@ -16,7 +16,7 @@ Description: The MOSAICbioacc application is a turn-key package providing bioacc
     factors (BCF/BMF/BSAF) from a toxicokinetic (TK) model fitted to
     accumulation-depuration data. It is designed to fulfil the requirements
     of regulators when examining applications for market authorization of active
-    substances.
+    substances. See Ratier et al. (2021) <doi:10.1101/2021.09.08.459421>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
