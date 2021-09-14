@@ -1,6 +1,6 @@
 Package: rbioacc
 Title: Inference and Prediction of ToxicoKinetic (TK) Models
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
     person("Virgile", "Baudrot", role = "aut", email = "virgile.baudrot@posteo.net"),
     person("Sandrine", "Charles", role = "aut"),
