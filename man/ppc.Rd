@@ -20,6 +20,11 @@ ppc(fit, ...)
 
 \item{\dots}{Additional arguments}
 }
+\value{
+A data frame with median and 95\\% credible interval
+
+a plot of class \code{ggplot}
+}
 \description{
 This is the generic \code{ppc} S3 method for plots of the predicted
 values along with 95\\% credible intervals

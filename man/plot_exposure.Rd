@@ -9,6 +9,9 @@ plot_exposure(object)
 \arguments{
 \item{object}{a data frame with exposure column}
 }
+\value{
+a plot of class \code{ggplot}
+}
 \description{
 Plot exposure profile
 }

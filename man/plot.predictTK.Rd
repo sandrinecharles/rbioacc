@@ -11,6 +11,9 @@
 
 \item{\dots}{Additional arguments}
 }
+\value{
+A plot of class \code{ggplot}
+}
 \description{
 This is the generic \code{plot} S3 method for the
 \code{predictTK}.

@@ -41,6 +41,11 @@ columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}}
 \item{gmax}{gmax (require if \code{keg} is provided)
 columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}}
 }
+\value{
+An object of class \code{predictTK}
+
+An object of class \code{predictTK}
+}
 \description{
 Use when parameter are manually given by the user.
 }

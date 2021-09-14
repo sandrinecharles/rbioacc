@@ -19,7 +19,7 @@ Deterministic parameters can be selected by setting \code{"deterministic"} and
 stochastic parameter with \code{"stochastic"}.}
 }
 \value{
-An object of class \code{data.frame}.
+A plot of class \code{ggplot}.
 }
 \description{
 Plot Posterior over Prior

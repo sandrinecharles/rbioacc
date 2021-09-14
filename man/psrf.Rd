@@ -11,6 +11,8 @@ psrf(fit)
 }
 \value{
 An object of class \code{data.frame} with two columns: PSRF and parameter
+
+a data frame with Potential Scale Reduction Factors
 }
 \description{
 Potential Scale Reduction Factors (PSRF) of the parameters

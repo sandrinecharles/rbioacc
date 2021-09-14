@@ -12,6 +12,9 @@ quantile_table(fit, probs = c(0.025, 0.5, 0.975))
 \item{probs}{Scalar or Vector of quantiles.
 Default is 0.025, 0.5 and 0.975 giving median and 95\% credible interval}
 }
+\value{
+A data frame with quantiles
+}
 \description{
 Quantiles of parameters
 }

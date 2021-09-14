@@ -25,10 +25,4 @@ Male \emph{Gammarus fossarum} exposed to Hg spiked water.
 A single exposure concentration was tested. The duration of the accumulation
 phase is 4 days.
 }
-\references{
-Ciccia, T. (2019). Accumulation et devenir du mercure chez
-l'espèce sentinelle Gammarus fossarum : de l'expérimentation au développement
-d'un modèle toxicocinétique multi-compartiments.
-Rapport de stage de Master 2, INRAE.
-}
 \keyword{dataset}

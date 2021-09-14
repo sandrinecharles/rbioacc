@@ -11,6 +11,9 @@
 
 \item{\dots}{Additional arguments}
 }
+\value{
+A plot of class \code{ggplot}
+}
 \description{
 Plot function for object of class \code{bioaccMetric}
 }
