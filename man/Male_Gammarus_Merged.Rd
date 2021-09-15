@@ -31,4 +31,10 @@ accumulation phase is 4 days for 0.0000708021 and 0.000283208
 \eqn{\mu g.m L^{-1}} exposure concentrations, and 7 days for 0.000141604
 \eqn{\mu g.m L^{-1}} exposure concentration.
 }
+\references{
+Ciccia, T. (2019). Accumulation et devenir du mercure chez
+l'espèce sentinelle Gammarus fossarum : de l'expérimentation au développement
+d'un modèle toxicocinétique multi-compartiments.
+Rapport de stage de Master 2, INRAE.
+}
 \keyword{dataset}
