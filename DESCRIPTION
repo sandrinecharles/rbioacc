@@ -4,9 +4,9 @@ Version: 1.0.2
 Authors@R: c(
     person("Virgile", "Baudrot", role = "aut", email = "virgile.baudrot@posteo.net"),
     person("Sandrine", "Charles", role = "aut"),
-    person("Ohélia", "Gestin", role = "ctb"),
+    person("Ophélia", "Gestin", role = "ctb"),
     person("Mélina", "Kaag", role = "aut"),
-    person("Christelle", "Lopez", role = "ctb"),
+    person("Christelle", "Lopes", role = "ctb"),
     person("Gauthier", "Multari", role = "ctb"),
     person("Alain", "Pavé", role = "ctb"),
     person("Aude", "Ratier", role = "aut"),
