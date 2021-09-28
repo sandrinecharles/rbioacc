@@ -56,6 +56,30 @@
   return(col_conc[!base::is.na(col_conc)])
 }
 
+#' Replace element of a vector
+#' 
+#' @param x a vector
+#' @param from a vector of elements to replace
+#' @param to a vector with replacing elements
+#' 
+#' @return a vector
+#' 
+#' @examples  
+#' replace_(1:10,c(2,4,5,8), c(0,0,0,0))
+#' replace_(c(1,2,2,3,2),c(3,2), c(4,5))
+#' 
+replace_ <- function(x,from,to){
+  if(length(from) != length(to)){
+    stop("length of `from` and `to` differs.")
+  }
+  for(i in 1:length(from)){
+    x <- replace(x, x %in% from[i], to[i])
+  }
+  return(x)
+}
+
+
+
 .readapt_time <- function(object, time_reference){
   obj_colname = base::colnames(object)
   lentp=length(time_reference)
