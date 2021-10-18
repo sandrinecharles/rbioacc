@@ -49,13 +49,16 @@ test_that("PriorPost",{
   })
   test_that("plot_PriorPost replace df", {
 
+    df_MGS <- df_PriorPost(fit_MGS)
     plt_MGS_df <- plot_PriorPost(df_MGS)
     
     dfr_MGS <- df_MGS
     dfr_MGS$parameter = replace_(df_MGS$parameter,"ku","kuw")
     plt_MGS_dfr <- plot_PriorPost(dfr_MGS)
 
+    df_CC <- df_PriorPost(fit_CC)
     plt_CC_df <- plot_PriorPost(df_CC)
+    
     dfr_CC <- df_CC
     dfr_CC$parameter <- replace_(df_CC$parameter, c("ku1","ku2","ku3"), c("kuw","kus","kupw"))
     plt_CC_dfr <- plot_PriorPost(dfr_CC)
