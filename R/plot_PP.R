@@ -113,7 +113,7 @@ plot_PriorPost <- function(x, ...){
 #' 
 plot_PriorPost.fitTK <- function(x, select = "all", ...){
   
-  df <- df_PriorPost(fit, select)
+  df <- df_PriorPost(x, select)
   
   df$group <- paste0(df$parameter, df$type)
   
