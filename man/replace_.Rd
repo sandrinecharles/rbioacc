@@ -2,7 +2,7 @@
 % Please edit documentation in R/zzz_internals.R
 \name{replace_}
 \alias{replace_}
-\title{Replace element of}
+\title{Replace element of a vector}
 \usage{
 replace_(x, from, to)
 }
@@ -17,7 +17,7 @@ replace_(x, from, to)
 a vector
 }
 \description{
-Replace element of
+Replace element of a vector
 }
 \examples{
  
