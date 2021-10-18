@@ -65,8 +65,8 @@
 #' @return a vector
 #' 
 #' @examples  
-#' replace_(1:10,c(2,4,5,8), c(0,0,0,0))
-#' replace_(c(1,2,2,3,2),c(3,2), c(4,5))
+#' rbioacc:::replace_(1:10,c(2,4,5,8), c(0,0,0,0))
+#' rbioacc:::replace_(c(1,2,2,3,2),c(3,2), c(4,5))
 #' 
 replace_ <- function(x,from,to){
   if(length(from) != length(to)){
