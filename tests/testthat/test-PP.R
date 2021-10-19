@@ -18,9 +18,9 @@ test_that("PriorPost",{
     df_CC <- df_PriorPost(fit_CC)
     
     # Check class
-    expect_true(class(df_MGS) == "data.frame")
-    expect_true(class(df_MGSG) == "data.frame")
-    expect_true(class(df_CC) == "data.frame")
+    expect_true(all(class(df_MGS) == c("df_PP", "data.frame")))
+    expect_true(all(class(df_MGSG) == c("df_PP", "data.frame")))
+    expect_true(all(class(df_CC) == c("df_PP", "data.frame")))
     
     # Check column names 
     expect_true(all(colnames(df_MGS) == c("parameter", "type", "value")))
@@ -31,7 +31,6 @@ test_that("PriorPost",{
     df_post_MGS = df_MGS[df_MGS$type == "posterior",]
     df_prior_MGS = df_MGS[df_MGS$type == "prior",]
     expect_true(all(df_post_MGS$parameter == df_prior_MGS$parameter))
-    
     
   })
   
@@ -45,7 +44,6 @@ test_that("PriorPost",{
     expect_true(all(class(plt_MGS) == c("gg", "ggplot")))
     expect_true(all(class(plt_MGSG) == c("gg", "ggplot")))
     
-    
   })
   test_that("plot_PriorPost replace df", {
 
@@ -53,7 +51,7 @@ test_that("PriorPost",{
     plt_MGS_df <- plot_PriorPost(df_MGS)
     
     dfr_MGS <- df_MGS
-    dfr_MGS$parameter = replace_(df_MGS$parameter,"ku","kuw")
+    dfr_MGS$parameter <- replace_(df_MGS$parameter,"ku","kuw")
     plt_MGS_dfr <- plot_PriorPost(dfr_MGS)
 
     df_CC <- df_PriorPost(fit_CC)
@@ -66,10 +64,6 @@ test_that("PriorPost",{
     # Check class
     expect_true(all(class(plt_CC_df) == c("gg", "ggplot")))
     expect_true(all(class(plt_CC_dfr) == c("gg", "ggplot")))
-    
-    
-    
-    
     
   })
   
