@@ -11,6 +11,9 @@
 
 \item{\dots}{Additional arguments}
 }
+\value{
+a plot of class \code{ggplot}
+}
 \description{
 This is the generic \code{plot} S3 method for the
 \code{fitTK}.  It plots the fit obtained for each

@@ -6,6 +6,8 @@
 #' @param x An object of class \code{predictTK} returned by predict
 #' @param \dots Additional arguments
 #' 
+#' @return A plot of class \code{ggplot}
+#' 
 #' @export
 #' 
 plot.predictTK <- function(x, ...){

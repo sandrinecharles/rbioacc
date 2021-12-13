@@ -9,6 +9,9 @@
 \arguments{
 \item{data_frame}{a dataframe}
 }
+\value{
+A vector of numeric
+}
 \description{
 Return column matching "concX" of a \code{data.frame} where X is metabolite
 }

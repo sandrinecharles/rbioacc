@@ -30,7 +30,8 @@ columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}}
 
 \item{param}{A dataframe with name of parameters \code{kee}, \code{keg}, \code{ku1},
 \code{ku2}, ...,  \code{km1}, \code{km2}, ... and \code{kem1}, \code{kem2}, ...,
-\code{sigmaConc}, \code{sigmaCmet} (if metabolites) and \code{sigmaGrowth} (if growth).}
+\code{sigmaConc}, \code{sigmaCmet} (if metabolites) and \code{sigmaGrowth} (if growth).
+The parameter \code{kee} is mandatory.}
 
 \item{time_accumulation}{the time of accumulation.}
 
@@ -40,6 +41,11 @@ columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}}
 
 \item{gmax}{gmax (require if \code{keg} is provided)
 columns with name in \code{expw}, \code{exps}, \code{expf} and \code{exppw}}
+}
+\value{
+An object of class \code{predictTK}
+
+An object of class \code{predictTK}
 }
 \description{
 Use when parameter are manually given by the user.

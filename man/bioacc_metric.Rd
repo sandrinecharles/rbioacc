@@ -19,6 +19,9 @@ BioConcentration Factor, \code{ss} for the steady state BioConcentration Factor.
 
 \item{route}{Provide exposure route: \code{all}}
 }
+\value{
+a data frame
+}
 \description{
 Biaccumulation metrics
 }

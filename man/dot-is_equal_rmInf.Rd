@@ -11,6 +11,9 @@
 
 \item{y}{A vector}
 }
+\value{
+A logical value
+}
 \description{
 Check if two vectors \code{x} and {y} are equal after remove \code{Inf}
 }

@@ -15,6 +15,9 @@ the data stored in the column names of \code{df}.}
 \item{values_to}{A string specifying the name of the column to create from
 the data stored in cell values.}
 }
+\value{
+The data frame with a "lengthens" shape: more rows, less columns
+}
 \description{
 A simple implementation of to pivot_longer of tidyr
 }

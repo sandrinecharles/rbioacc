@@ -1,8 +1,10 @@
 #' @export
 #' 
+#' @rdname bioacc_metric
+#' 
+#' @param fit An \code{stanFit} object
 #' @param \dots Further arguments to be passed to generic methods
 #' 
-#' @rdname bioacc_metric
 #' 
 bioacc_metric <- function(fit, ...){
   UseMethod("bioacc_metric")
@@ -10,12 +12,14 @@ bioacc_metric <- function(fit, ...){
 
 #' Biaccumulation metrics
 #' 
-#' @param fit An \code{stanFit} object
+#' 
+#' @rdname bioacc_metric
+#' 
 #' @param type A string with the type of metric: \code{k} for the kinetics
 #' BioConcentration Factor, \code{ss} for the steady state BioConcentration Factor.
 #' @param route Provide exposure route: \code{all}
 #' 
-#' @rdname bioacc_metric
+#' @return a data frame 
 #' 
 #' @export
 #' 
@@ -63,6 +67,8 @@ bioacc_metric.fitTK <- function(fit, type = "k", route = "all", ...){
 #'  
 #' @export
 #' 
+#' @return A plot of class \code{ggplot}
+#' 
 plot.bioaccMetric <- function(x, ...){
   df <- x
 
@@ -88,6 +94,8 @@ plot.bioaccMetric <- function(x, ...){
 #' @param object a data frame.
 #'  
 #' @export
+#' 
+#' @return A vector of string
 #' 
 exposure_names <- function(object){
   col_exposure <- .index_col_exposure(object)

@@ -2,6 +2,8 @@
 #' 
 #' @param object a data frame with exposure column
 #' 
+#' @return a plot of class \code{ggplot}
+#' 
 #' @export
 #' 
 plot_exposure <- function(object){

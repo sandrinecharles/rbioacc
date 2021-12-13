@@ -38,6 +38,6 @@ days. Three metabolites were quantified. The growth of organism was included.
 \references{
 Ashauer, R. et al. (2012). Significance of xenobiotic metabolism
 for bioaccumulation kinetics of organic chemicals in Gammarus pulex.
-Environmental Science Technologie, 46: 3498-3508.
+Environmental Science Technology, 46: 3498-3508.
 }
 \keyword{dataset}

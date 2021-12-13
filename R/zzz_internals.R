@@ -5,6 +5,8 @@
 #' the data stored in the column names of \code{df}.
 #' @param values_to A string specifying the name of the column to create from
 #'  the data stored in cell values.
+#'  
+#' @return The data frame with a "lengthens" shape: more rows, less columns 
 #' 
 .fonte <- function(df, names_to, values_to){
   dfout <- data.frame(
@@ -21,6 +23,8 @@
 #' @param x A vector
 #' @param y A vector
 #' 
+#' @return A logical value
+#' 
 .is_equal_rmInf <- function(x,y){ 
   ux = unique(x) ; uy = unique(y)
   ux = ux[ux != Inf] ; uy = uy[uy != Inf]
@@ -32,6 +36,8 @@
 #' 
 #' @param data_frame a dataframe
 #' 
+#' @return A vector of numeric
+#' 
 .index_col_exposure <- function(data_frame){
   col_exp <- base::match(c("expw", "exps", "expf", "exppw"), base::colnames(data_frame))
   return(col_exp[!base::is.na(col_exp)])
@@ -41,12 +47,41 @@
 #' 
 #' @param data_frame a dataframe
 #' 
+#' @return A vector of numeric
+#' 
 .index_col_metabolite <- function(data_frame){
   obj_colname <- base::colnames(data_frame)
   col_conc <- obj_colname[sapply(obj_colname, function(x){ regexpr("conc", x) == TRUE})]
   col_conc <- match(col_conc[col_conc != "conc"], obj_colname)
   return(col_conc[!base::is.na(col_conc)])
 }
+
+#' Replace element of a vector
+#' 
+#' @param x a vector
+#' @param from a vector of elements to replace
+#' @param to a vector with replacing elements
+#' 
+#' @return a vector
+#' 
+#' @export
+#' 
+#' @examples  
+#' replace_(1:10,c(2,4,5,8), c(0,0,0,0))
+#' replace_(c(1,2,2,3,2),c(3,2), c(4,5))
+#' 
+#' 
+replace_ <- function(x,from,to){
+  if(length(from) != length(to)){
+    stop("length of `from` and `to` differs.")
+  }
+  for(i in 1:length(from)){
+    x <- replace(x, x %in% from[i], to[i])
+  }
+  return(x)
+}
+
+
 
 .readapt_time <- function(object, time_reference){
   obj_colname = base::colnames(object)

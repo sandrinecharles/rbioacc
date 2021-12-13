@@ -9,6 +9,9 @@ exposure_names(object)
 \arguments{
 \item{object}{a data frame.}
 }
+\value{
+A vector of string
+}
 \description{
 Retrieve exposure routes names from object
 }

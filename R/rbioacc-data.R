@@ -26,6 +26,7 @@
 #' l'espèce sentinelle Gammarus fossarum : de l'expérimentation au développement
 #' d'un modèle toxicocinétique multi-compartiments.
 #' Rapport de stage de Master 2, INRAE.
+#' 
 #'
 #' @keywords dataset
 #' 
@@ -59,6 +60,7 @@ NULL
 #' l'espèce sentinelle Gammarus fossarum : de l'expérimentation au développement
 #' d'un modèle toxicocinétique multi-compartiments.
 #' Rapport de stage de Master 2, INRAE.
+#' 
 #'
 #' @keywords dataset
 #' 
@@ -96,7 +98,7 @@ NULL
 #' 
 #' @references Ashauer, R. et al. (2012). Significance of xenobiotic metabolism 
 #' for bioaccumulation kinetics of organic chemicals in Gammarus pulex.
-#' Environmental Science Technologie, 46: 3498-3508.
+#' Environmental Science Technology, 46: 3498-3508.
 #'
 #' @keywords dataset
 #' 

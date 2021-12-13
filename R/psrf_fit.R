@@ -3,6 +3,8 @@
 #' @param fit An object of class \code{fitTK}
 #' @return An object of class \code{data.frame} with two columns: PSRF and parameter
 #' 
+#' @return a data frame with Potential Scale Reduction Factors
+#' 
 #' @export
 #'
 
