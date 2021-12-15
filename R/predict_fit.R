@@ -191,6 +191,7 @@ predict_stan <- function(object, data, mcmc_size = NULL, fixed_init = TRUE, time
   iter <- ifelse(is.null(mcmc_size), iter, mcmc_size)
 
   stanTKdata <- modelData_predictStan(object, data, mcmc_size, fixed_init, time_interp)
+  
   stanfit <- rstan::sampling(stanmodels$TK_predict, data = stanTKdata, alg=alg, iter=iter, chains=chains,  ...)
   
   out <- list(stanTKdata = stanTKdata, stanfit = stanfit, originTKdata = object$stanTKdata)
@@ -238,9 +239,9 @@ modelData_predictStan <- function(object, data, mcmc_size = NULL, fixed_init = T
     len_vt <- lentp
     vt <- tp
   } else{
-    lentp <- length(time_interp)
-    tp <- time_interp
-    #☺ EXPOSURE
+    tp <- unique(sort(c(time_interp, data$time)))
+    lentp <- length(tp)
+    # EXPOSURE
     len_vt <- nrow(data)
     vt <- data$time
   }
