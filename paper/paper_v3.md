@@ -256,7 +256,6 @@ df_0.025 <- structure(list(
   row.names = c(NA, -16L), class = c("tbl_df", "tbl", "data.frame"))
 
 data <- df_0.025
-
 ### build the TK model according to data
 modeldata <- modelData(data, time_accumulation = 6) # indicate the time at the 
                                                     # end of exposure
@@ -323,6 +322,33 @@ plot(predict_manual(mcmc_m3, data_4pred2))
 
 
 ![Example of the prediction step for \textit{Spirostomum} exposed to fluoxetine at 0.05 $\mu g.mL^{-1}$. Orange curve is the predicted median of the internal concentration with TK parameters estimated from the exposure concentration at 0.025 $\mu g.mL^{-1}$. The gray area is the 95\% credible interval of predictions.\label{fig:fig5}](pred.png){width="50%"}
+
+## Interpolation of exposure profile
+
+Using linear interpolation of the exposure profile, we can plot the result of 
+an inference process, a calibration, a validation or a prediction over a finer time
+scale. The option is `time_interp` in function `plot()` for `fitTK` or `predictTK`
+objects.
+
+For instance in the model `m1`, the time step has 21 time points from 0 to 147.
+For an interpolation at every unit of time step, we can provide the following code:
+
+```
+# m1 is a fitTK object so:
+plot(m1, time_interp = seq(0,147,1))
+
+```
+
+The underlying prediction function is named `predict_stan` since it re-use the 
+stan sampler to make the prediction. It can be accessed with:
+
+```
+# prediction step
+predict_m3_stan <- predict_stan(m3, data_4pred, time_interp = seq(0,12,0.01), 
+  mcmc_size = 2000, chains = 4)
+# plot of the prediction
+plot(predict_m3_stan)
+```
 
 
 ```

@@ -39,7 +39,7 @@ plot.fitTK <- function(x, time_interp = NULL, ...){
   } else{
     object <- x
     data <- x$stanTKdata$origin_data
-    predict_TKstan <- predict_stan(object, data, time_interp = time_interp)
+    predict_TKstan <- predict_stan(object, data, time_interp = time_interp, ...)
   
     plt <- plot(predict_TKstan, add_data = TRUE)
     
