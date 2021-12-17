@@ -14,7 +14,7 @@ tags:
   - Toxicokinetic
   - Environmental Risk Assessment
   - Bayesian inference
-date: "08 September 2021"
+date: "16 December 2021"
 output:
   pdf_document:
     extra_dependencies: ["float"]
